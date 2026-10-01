@@ -525,7 +525,6 @@ app.put("/update-profile", authMiddleware, async (req, res) => {
 
 app.post("/forget-password", async (req, res) => {
     const { email } = req.body;
-
     try {
 
         if (!email || typeof email !== "string") {
@@ -566,6 +565,15 @@ app.post("/forget-password", async (req, res) => {
 
         const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
+        transporter.verify((error, success) => {
+            if (error) {
+                console.error("Error verifying email transporter:", error);
+            }
+
+            else {
+                console.log("Email transporter is ready to send messages");
+            }
+        });
         // Send email
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
@@ -574,10 +582,13 @@ app.post("/forget-password", async (req, res) => {
             text: `Click this link to reset your password: ${resetLink}`
         });
 
+        
+
         return res.status(200).json({
             message: "Password reset link sent to your email",
             resetToken: resetToken
         });
+        
 
     } catch (error) {
         console.error("Error forgetting password:", error);
