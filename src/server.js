@@ -484,7 +484,7 @@ app.put("/update-profile", authMiddleware, async (req, res) => {
                 phone,
                 dateOfBirth: dateOfBirth
                     ? new Date(dateOfBirth)
-                    : null,
+                    : dateOfBirth,
                 gender,
                 address,
                 city,
