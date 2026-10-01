@@ -565,15 +565,6 @@ app.post("/forget-password", async (req, res) => {
 
         const resetLink = `http://localhost:3000/reset-password?token=${resetToken}`;
 
-        transporter.verify((error, success) => {
-            if (error) {
-                console.error("Error verifying email transporter:", error);
-            }
-
-            else {
-                console.log("Email transporter is ready to send messages");
-            }
-        });
         // Send email
         await transporter.sendMail({
             from: process.env.EMAIL_USER,
