@@ -141,7 +141,24 @@ export const registerUser = async (userData) => {
     return {
         token: token,
         refreshToken: refreshToken,
-        user
+        user: {
+            id: user.id,
+            name: user.name,
+            email: user.email,
+            phone: user.phone,
+            dateOfBirth: user.dateOfBirth,
+            sort_order: user.sort_order,
+            gender: user.gender,
+            address: user.address,
+            city: user.city,
+            country: user.country,
+            profileImage: user.profileImage,
+            isVerified: user.isVerified,
+            isActive: user.isActive,
+            role: user.role,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt
+        }
     };
 }
 

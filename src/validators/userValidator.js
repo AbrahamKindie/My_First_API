@@ -26,6 +26,7 @@ export const updateProfileSchema = z.object({
     phone: z.string().regex( /^(0[79]\d{8}|\+251[79]\d{8}|251[79]\d{8})$/,
         "Invalid phone number"
     ).optional(),
+    gender: z.enum(["Male", "Female", "Other"]).optional(),
    dateOfBirth: z.string().optional(),
    address: z.string().optional(),
    city: z.string().optional(),
