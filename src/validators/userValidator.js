@@ -8,7 +8,9 @@ export const registerSchema = z.object({
         "Invalid phone number"
     ),
     dateOfBirth: z.string().optional(),
-    gender: z.enum(["male", "female", "other"]).optional(),
+    gender: z.enum(["MALE", "FEMALE", "OTHER"], 
+        { error: "Gender should be either MALE, FEMALE, or OTHER" }
+    ).optional(),
     address: z.string().optional(),
     city: z.string().optional(),
     country: z.string().optional(),
@@ -26,7 +28,9 @@ export const updateProfileSchema = z.object({
     phone: z.string().regex( /^(0[79]\d{8}|\+251[79]\d{8}|251[79]\d{8})$/,
         "Invalid phone number"
     ).optional(),
-    gender: z.enum(["Male", "Female", "Other"]).optional(),
+    gender: z.enum(["MALE", "FEMALE", "OTHER"], 
+        { error: "Gender should be either MALE, FEMALE, or OTHER" }
+    ).optional(),
    dateOfBirth: z.string().optional(),
    address: z.string().optional(),
    city: z.string().optional(),
@@ -45,6 +49,10 @@ export const changePasswordSchema = z.object({
 });
 
 export const updateUserSchema = z.object({
-    email: z.string().email({ message: "Invalid email address" }).optional(),
-    role: z.enum(["USER", "ADMIN"]).optional()
+
+  email: z.string().email({ message: "Invalid email address" }).optional(),
+   role: z.enum(["USER", "ADMIN"], {
+    error: "Role should be either USER or ADMIN"
+}).optional()
+
 });

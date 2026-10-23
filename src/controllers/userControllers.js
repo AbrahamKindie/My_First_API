@@ -1,6 +1,6 @@
 
 import prisma from "../db/prisma.js";
-import { fetchAllUsers, profile, updateUserProfile, getOneUser, userUpdate, userActivate } from "../services/userServices.js";
+import { fetchAllUsers, profile, updateUserProfile, getOneUser, userUpdate, userActivate, userDeactivate, userDelete } from "../services/userServices.js";
 
 export const getAllUsers = async (req, res) => {
     try{
@@ -77,54 +77,9 @@ export const activateUser = async (req, res) => {
 };
 
 export const deactivateUser = async (req, res) => {
-    try {
-        const userId = Number(req.params.id);
+    try{
 
-        if (Number.isNaN(userId)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        if (!user.isActive){
-            return res.status(400).json(
-                {
-                    message: "User is already deactivated"
-                }
-               )
-        }
-
-        const updatedUser = await prisma.user.update({
-            where: {
-                id: userId
-            },
-            data: {
-                isActive: false
-            }
-        });
-
-        res.status(200).json({
-            message: "User deactivated successfully",
-            user: {
-                id: updatedUser.id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                isActive: updatedUser.isActive,
-                role: updatedUser.role,
-            }
-        });
+        return userDeactivate(req, res);
 
     } catch (error) {
         console.error("Error deactivating user:", error);
@@ -133,36 +88,10 @@ export const deactivateUser = async (req, res) => {
 };
 
 export const deleteUser = async (req, res) => {
-    try {
-        const userId = Number(req.params.id);
+    
+    try{
 
-        if (Number.isNaN(userId)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        await prisma.user.delete({
-            where: {
-                id: userId
-            }
-        });
-
-        res.status(200).json({
-            message: "User deleted successfully"
-        });
+        return userDelete(req, res);
 
     } catch (error) {
         console.error("Error deleting user:", error);

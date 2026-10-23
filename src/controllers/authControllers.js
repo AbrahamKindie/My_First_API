@@ -1,6 +1,5 @@
 
-import bcrypt from "bcrypt";
-import prisma from "../db/prisma.js";
+
 import { registerUser, loginUser, refreshAccessToken, logoutUser, forgotPasswordUser, resetPasswordUser } from "../services/authServices.js";
 
 
