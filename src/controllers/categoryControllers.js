@@ -1,5 +1,5 @@
 
-import { createCategory, updateCategory, deleteCategory, getAllCategories, getCategoryById} from "../services/category.service.js";
+import { createCategory, updateCategory, deleteCategory, getAllCategories, getCategoryById} from "../services/categoryService.js";
 
 // 1. Create Category
 export const createCategoryController = async (req, res) => {

@@ -2,13 +2,18 @@
 import express from "express";
 import authRoutes from "./routs/authRoutes.js";
 import usersRoutes from "./routs/userRoutes.js";
+import categoryRoutes from "./routs/categoryRoutes.js";
+import productRoutes from "./routs/productRoutes.js";
 
 
 const app = express();
 
+//API Routs
 app.use(express.json());
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
+app.use("/categories", categoryRoutes);
+app.use("/products", productRoutes);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

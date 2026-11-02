@@ -6,7 +6,7 @@ export const createCategorySchema = z.object({
         .string()
         .trim()
         .min(2, "Category name must be at least 2 characters")
-        .max(25, "Category name cannot exceed 50 characters"),
+        .max(25, "Category name cannot exceed 25 characters"),
 });
 
 export const updateCategorySchema = z.object({

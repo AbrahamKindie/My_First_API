@@ -1,15 +1,10 @@
 
 import prisma from "../db/prisma.js";
 import { z } from "zod";
-
-// Validation schema
-const categorySchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(2, "Category name must be at least 2 characters")
-    .max(50, "Category name cannot exceed 50 characters"),
-});
+import {
+  createCategorySchema,
+  updateCategorySchema,
+} from "../validators/categoryValidation.js";
 
 // Helper for consistent errors
 const createError = (message, statusCode, details) => {
@@ -25,7 +20,7 @@ const createError = (message, statusCode, details) => {
 
 // 1. Create Category
 export const createCategory = async (data) => {
-  const result = categorySchema.safeParse(data);
+  const result = createCategorySchema.safeParse(data);
 
   if (!result.success) {
     throw createError(
@@ -53,16 +48,30 @@ export const createCategory = async (data) => {
   }
 };
 
-// 2. Get All Categories
+// 2. Get All Categories with Products and Total Products
 export const getAllCategories = async () => {
-  return await prisma.category.findMany({
+  const categories = await prisma.category.findMany({
     orderBy: {
       createdAt: "desc",
     },
+    include: {
+      _count: {
+        select: {
+          products: true,
+        },
+      },
+       products: true,
+    },
   });
+
+  return categories.map(({ _count, products, ...category }) => ({
+    ...category,
+    totalProducts: _count.products,
+    products,
+  }));
 };
 
-// 3. Get Category By ID
+// 3. Get Category By ID with Products and Total Products
 export const getCategoryById = async (id) => {
   if (!Number.isSafeInteger(id) || id <= 0) {
     throw createError("Invalid category ID", 400);
@@ -70,22 +79,36 @@ export const getCategoryById = async (id) => {
 
   const category = await prisma.category.findUnique({
     where: { id },
+    include: {
+      _count: {
+        select: {
+          products: true,
+        },
+      },
+        products: true,
+    },
   });
 
   if (!category) {
     throw createError("Category not found", 404);
   }
 
-  return category;
-};
+const { _count, products, ...categoryData } = category;
 
-// 4. Update Category
+return {
+  ...categoryData,
+  totalProducts: _count.products,
+  products,
+};
+}
+
+// 4. Update Category (unchanged)
 export const updateCategory = async (id, data) => {
   if (!Number.isSafeInteger(id) || id <= 0) {
     throw createError("Invalid category ID", 400);
   }
 
-  const result = categorySchema.safeParse(data);
+  const result = updateCategorySchema.safeParse(data);
 
   if (!result.success) {
     throw createError(
@@ -98,7 +121,6 @@ export const updateCategory = async (id, data) => {
     );
   }
 
-  // Check whether category exists
   const category = await prisma.category.findUnique({
     where: { id },
   });
@@ -123,7 +145,7 @@ export const updateCategory = async (id, data) => {
   }
 };
 
-// 5. Delete Category
+// 5. Delete Category (unchanged)
 export const deleteCategory = async (id) => {
   if (!Number.isSafeInteger(id) || id <= 0) {
     throw createError("Invalid category ID", 400);
@@ -142,11 +164,9 @@ export const deleteCategory = async (id) => {
       where: { id },
     });
   } catch (error) {
-    // For example, a related product may prevent deletion
-    // if the Prisma relation uses restrictive deletion.
     if (error.code === "P2003" || error.code === "P2014") {
       throw createError(
-        "Cannot delete this category because it has related records",
+        "Cannot delete this category because it has related products. Please remove or reassign those products first.",
         409
       );
     }
