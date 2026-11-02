@@ -23,7 +23,7 @@ model User {
 
   isVerified  Boolean  @default(false)
   isActive    Boolean  @default(true)
-  role        String   @default("USER")
+  role        Role   @default(USER)
 
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
@@ -33,4 +33,35 @@ model User {
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime? @updatedAt
+}
+
+enum Role{
+     
+     USER
+     ADMIN
+}
+
+
+model Category {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique
+  products  Product[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  price       Decimal  @db.Decimal(10, 2)
+  stock       Int      @default(0)
+
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([categoryId])
 }
