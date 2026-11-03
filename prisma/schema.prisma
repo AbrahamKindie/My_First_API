@@ -31,6 +31,7 @@ model User {
   isVerified  Boolean  @default(false)
   isActive    Boolean  @default(true)
   role        Role   @default(USER)
+  orders      Order[]
 
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
@@ -57,6 +58,7 @@ model Product {
   price       Decimal  @db.Decimal(10, 2)
   stock       Int      @default(0)
   images       String[] 
+  orderItems OrderItem[]
 
   categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
@@ -65,4 +67,42 @@ model Product {
   updatedAt   DateTime @updatedAt
 
   @@index([categoryId])
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+model Order {
+  id        Int         @id @default(autoincrement())
+  userId    Int
+  totalPrice     Decimal     @db.Decimal(10, 2)
+  status    OrderStatus @default(PENDING)
+
+  user      User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     OrderItem[]
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model OrderItem {
+  id        Int     @id @default(autoincrement())
+  orderId   Int
+  productId Int
+  quantity  Int
+  price     Decimal @db.Decimal(10, 2)
+
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  @@unique([orderId, productId])
+  @@index([productId])
 }
