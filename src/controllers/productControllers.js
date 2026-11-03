@@ -28,7 +28,8 @@ export const createProductController = async (req, res) => {
 // 2. Get All Products
 export const getAllProductsController = async (req, res) => {
   try {
-    const products = await getAllProducts();
+    const { search, categoryId } = req.query;
+    const products = await getAllProducts(search, categoryId === undefined ? undefined : Number(categoryId),);
 
     return res.status(200).json({
       success: true,

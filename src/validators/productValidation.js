@@ -29,6 +29,9 @@ export const createProductSchema = z.object({
     .number()
     .int("Category ID must be an integer")
     .positive("Category ID must be greater than 0"),
+
+  images: z
+  .array(z.string().url("please provide a valid URL")),
 });
 
 export const updateProductSchema = createProductSchema.partial();

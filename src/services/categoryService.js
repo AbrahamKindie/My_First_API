@@ -64,12 +64,8 @@ export const getAllCategories = async () => {
     },
   });
 
-  return categories.map(({ _count, products, ...category }) => ({
-    ...category,
-    totalProducts: _count.products,
-    products,
-  }));
-};
+  return categories;
+}
 
 // 3. Get Category By ID with Products and Total Products
 export const getCategoryById = async (id) => {
@@ -93,13 +89,9 @@ export const getCategoryById = async (id) => {
     throw createError("Category not found", 404);
   }
 
-const { _count, products, ...categoryData } = category;
+//const { _count, products, ...categoryData } = category;
 
-return {
-  ...categoryData,
-  totalProducts: _count.products,
-  products,
-};
+return category;
 }
 
 // 4. Update Category (unchanged)

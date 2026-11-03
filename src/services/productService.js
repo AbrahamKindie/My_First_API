@@ -25,6 +25,7 @@ export const createProduct = async (data) => {
       price: data.price,
       stock: data.stock ?? 0,
       categoryId: data.categoryId,
+      images: data.images,
     },
     include: {
       category: true,
@@ -33,10 +34,21 @@ export const createProduct = async (data) => {
 };
 
 // 2. Get All Products
-export const getAllProducts = async () => {
+export const getAllProducts = async (search, categoryId) => {
   return await prisma.product.findMany({
+        where: {
+      ...(search && {
+        name: {
+          contains: search,
+          mode: "insensitive",
+        },
+      }),
+     ...(categoryId && {
+        categoryId: Number(categoryId),
+      }),
+    },
     orderBy: {
-      createdAt: "desc",
+      createdAt: "desc"
     },
     include: {
       category: true,
