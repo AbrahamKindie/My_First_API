@@ -17,6 +17,14 @@ export const Role = {
 export type Role = (typeof Role)[keyof typeof Role]
 
 
+export const DiscountType = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED'
+} as const
+
+export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
 export const OrderStatus = {
   PENDING: 'PENDING',
   CONFIRMED: 'CONFIRMED',
@@ -26,3 +34,12 @@ export const OrderStatus = {
 } as const
 
 export type OrderStatus = (typeof OrderStatus)[keyof typeof OrderStatus]
+
+
+export const CartStatus = {
+  ACTIVE: 'ACTIVE',
+  CONVERTED: 'CONVERTED',
+  ABANDONED: 'ABANDONED'
+} as const
+
+export type CartStatus = (typeof CartStatus)[keyof typeof CartStatus]

@@ -21,13 +21,13 @@ export const createOrderController = async (req, res) => {
       data: order,
     });
   } catch (error) {
-    return res.status(error.statusCode || 400).json({
-      success: false,
-      message: error.statusCode
-        ? error.message
-        : "Failed to create order",
+    console.error("Create order error:", error);
+
+    return res.status(error.statusCode || 500).json({
+        success: false,
+        message: error.message || "Internal server error"
     });
-  }
+}
 };
 
 // Get all orders
@@ -94,6 +94,8 @@ export const getMyOrdersController = async (req, res) => {
       pagination: result.pagination,
     });
   } catch (error) {
+    console.error("Get my orders error:", error);
+
     return res.status(500).json({
       success: false,
       message: "Internal server error",

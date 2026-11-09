@@ -1,7 +1,7 @@
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
-   url= env("DATABASE_URL")
+  url= env("DATABASE_URL")
 }
 
 datasource db {
@@ -32,6 +32,8 @@ model User {
   isActive    Boolean  @default(true)
   role        Role   @default(USER)
   orders      Order[]
+  carts      Cart[]
+  reviews ProductReview[]
 
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
@@ -59,15 +61,60 @@ model Product {
   stock       Int      @default(0)
   images       String[] 
   orderItems OrderItem[]
+  cartItems CartItem[]
 
   categoryId  Int
   category    Category @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  isFeatured Boolean @default(false)
+  discount   ProductDiscount?
+  reviews    ProductReview[]
 
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
   @@index([categoryId])
 }
+
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED
+}
+
+model ProductDiscount {
+  id        Int          @id @default(autoincrement())
+  productId Int          @unique
+  type      DiscountType
+  value     Decimal      @db.Decimal(10, 2)
+  startsAt  DateTime?
+  endsAt    DateTime?
+  isActive  Boolean      @default(true)
+
+  product   Product      @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  @@index([isActive])
+}
+
+
+model ProductReview {
+  id        Int      @id @default(autoincrement())
+  productId Int
+  userId    Int
+  rating    Int
+  comment   String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([productId, userId])
+  @@index([productId])
+  @@index([userId])
+}
+
 
 enum OrderStatus {
   PENDING
@@ -104,5 +151,43 @@ model OrderItem {
   product   Product @relation(fields: [productId], references: [id], onDelete: Restrict)
 
   @@unique([orderId, productId])
+  @@index([productId])
+}
+
+enum CartStatus {
+  ACTIVE
+  CONVERTED
+  ABANDONED
+}
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int
+  status    CartStatus @default(ACTIVE)
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items     CartItem[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@index([userId])
+  @@index([status])
+  @@index([userId, status])
+}
+
+model CartItem {
+  id        Int      @id @default(autoincrement())
+  cartId    Int
+  productId Int
+  quantity  Int      @default(1)
+
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Restrict)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([cartId, productId])
   @@index([productId])
 }

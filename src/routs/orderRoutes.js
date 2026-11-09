@@ -15,7 +15,7 @@ const router = Router();
 
 router.post("/", authenticate, validate(createOrderSchema), createOrderController);
 router.get("/", authenticate, requireAdmin, getAllOrdersController);
-router.get("/:id", authenticate, getOrderByIdController);
-router.patch("/:id/status", authenticate, requireAdmin, validate(updateOrderStatusSchema), changeOrderStatusController);
 router.get("/my-orders", authenticate, getMyOrdersController);
+router.get("/:id", authenticate, getOrderByIdController);
+router.patch("/status/:id", authenticate, requireAdmin, validate(updateOrderStatusSchema), changeOrderStatusController);
 export default router;

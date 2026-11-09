@@ -1,17 +1,77 @@
+
 import prisma from "../db/prisma.js";
 
+const createError = (message, statusCode = 400) => {
+  const error = new Error(message);
+  error.statusCode = statusCode;
+  return error;
+};
+
+// Calculate the price after applying an active discount.
+const calculateDiscountedPrice = (product) => {
+  const originalPrice = Number(product.price);
+  const discount = product.discount;
+
+  if (!discount || !discount.isActive) {
+    return originalPrice;
+  }
+
+  const now = new Date();
+
+  if (discount.startsAt && new Date(discount.startsAt) > now) {
+    return originalPrice;
+  }
+
+  if (discount.endsAt && new Date(discount.endsAt) < now) {
+    return originalPrice;
+  }
+
+  const discountValue = Number(discount.value);
+
+  let finalPrice;
+
+  if (discount.type === "PERCENTAGE") {
+    finalPrice = originalPrice - (originalPrice * discountValue) / 100;
+  } else {
+    finalPrice = originalPrice - discountValue;
+  }
+
+  if (finalPrice < 0) {
+    throw createError(
+      `Invalid discount configuration for product: ${product.name}`,
+      400
+    );
+  }
+
+  // Keep prices accurate to two decimal places.
+  return Math.round(finalPrice * 100) / 100;
+};
+
+// 1. Create order
 export const createOrder = async (userId, items) => {
+  if (!Array.isArray(items) || items.length === 0) {
+    throw createError("Order must contain at least one product");
+  }
+
   return await prisma.$transaction(async (tx) => {
-    // 1. Combine duplicate product IDs
+    // Combine duplicate product IDs.
     const productQuantities = new Map();
 
     for (const item of items) {
-      const currentQuantity =
-        productQuantities.get(item.productId) || 0;
+      const productId = Number(item.productId);
+      const quantity = Number(item.quantity);
+
+      if (!Number.isSafeInteger(productId) || productId <= 0) {
+        throw createError("Invalid product ID");
+      }
+
+      if (!Number.isSafeInteger(quantity) || quantity <= 0) {
+        throw createError("Product quantity must be a positive integer");
+      }
 
       productQuantities.set(
-        item.productId,
-        currentQuantity + item.quantity
+        productId,
+        (productQuantities.get(productId) || 0) + quantity
       );
     }
 
@@ -23,40 +83,53 @@ export const createOrder = async (userId, items) => {
       })
     );
 
-    // 2. Find the requested products
+    // Find products and their discounts.
     const products = await tx.product.findMany({
       where: {
         id: {
           in: normalizedItems.map((item) => item.productId),
         },
       },
+      include: {
+        discount: true,
+      },
     });
 
-    // 3. Check whether every product exists
     if (products.length !== normalizedItems.length) {
-      throw new Error("One or more products were not found");
+      throw createError("One or more products were not found", 404);
     }
 
     const productMap = new Map(
       products.map((product) => [product.id, product])
     );
 
-    // 4. Check stock and calculate the total
+    // Check stock and calculate discounted prices.
     let totalPrice = 0;
 
-    for (const item of normalizedItems) {
+    const orderItems = normalizedItems.map((item) => {
       const product = productMap.get(item.productId);
 
       if (product.stock < item.quantity) {
-        throw new Error(
-          `Insufficient stock for product: ${product.name}`
+        throw createError(
+          `Insufficient stock for product: ${product.name}`,
+          400
         );
       }
 
-      totalPrice += Number(product.price) * item.quantity;
-    }
+      const finalPrice = calculateDiscountedPrice(product);
 
-    // 5. Decrease stock safely
+      totalPrice += finalPrice * item.quantity;
+
+      return {
+        productId: product.id,
+        quantity: item.quantity,
+        price: finalPrice.toFixed(2),
+      };
+    });
+
+    totalPrice = Math.round(totalPrice * 100) / 100;
+
+    // Decrease stock safely.
     for (const item of normalizedItems) {
       const result = await tx.product.updateMany({
         where: {
@@ -73,27 +146,20 @@ export const createOrder = async (userId, items) => {
       });
 
       if (result.count !== 1) {
-        throw new Error(
-          `Insufficient stock for product ID: ${item.productId}`
+        throw createError(
+          `Insufficient stock for product ID: ${item.productId}`,
+          400
         );
       }
     }
 
-    // 6. Create the order and its order items
-    const order = await tx.order.create({
+    // Create order with the actual purchase prices.
+    return await tx.order.create({
       data: {
-        userId,
+        userId: Number(userId),
         totalPrice: totalPrice.toFixed(2),
         items: {
-          create: normalizedItems.map((item) => {
-            const product = productMap.get(item.productId);
-
-            return {
-              productId: item.productId,
-              quantity: item.quantity,
-              price: product.price,
-            };
-          }),
+          create: orderItems,
         },
       },
       include: {
@@ -104,14 +170,15 @@ export const createOrder = async (userId, items) => {
         },
       },
     });
-
-    return order;
   });
 };
 
-
-// 1. Get all orders (Admin only)
-export const getAllOrders = async ({ page = 1, limit = 10, status } = {}) => {
+// 2. Get all orders (Admin only)
+export const getAllOrders = async ({
+  page = 1,
+  limit = 10,
+  status,
+} = {}) => {
   const currentPage = Math.max(1, Number(page) || 1);
   const pageSize = Math.min(100, Math.max(1, Number(limit) || 10));
   const skip = (currentPage - 1) * pageSize;
@@ -153,14 +220,12 @@ export const getAllOrders = async ({ page = 1, limit = 10, status } = {}) => {
   };
 };
 
-// 2. Get one order by ID
+// 3. Get one order by ID
 export const getOrderById = async (orderId, userId, role) => {
   const id = Number(orderId);
 
-  if (!Number.isInteger(id) || id <= 0) {
-    const error = new Error("Invalid order ID");
-    error.statusCode = 400;
-    throw error;
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    throw createError("Invalid order ID", 400);
   }
 
   const order = await prisma.order.findUnique({
@@ -182,22 +247,17 @@ export const getOrderById = async (orderId, userId, role) => {
   });
 
   if (!order) {
-    const error = new Error("Order not found");
-    error.statusCode = 404;
-    throw error;
+    throw createError("Order not found", 404);
   }
 
-  // Regular users can view only their own orders.
   if (role !== "ADMIN" && order.userId !== Number(userId)) {
-    const error = new Error("You are not allowed to view this order");
-    error.statusCode = 403;
-    throw error;
+    throw createError("You are not allowed to view this order", 403);
   }
 
   return order;
 };
 
-// Get My Orders (Regular users only)
+// 4. Get my orders
 export const getMyOrders = async (userId, page = 1, limit = 10) => {
   const currentPage = Math.max(1, Number(page) || 1);
   const pageSize = Math.min(100, Math.max(1, Number(limit) || 10));
@@ -235,41 +295,14 @@ export const getMyOrders = async (userId, page = 1, limit = 10) => {
   };
 };
 
-// 3. Change order status (Admin only)
+// 5. Change order status (Admin only)
 export const changeOrderStatus = async (orderId, newStatus) => {
   const id = Number(orderId);
 
-  if (!Number.isInteger(id) || id <= 0) {
-    const error = new Error("Invalid order ID");
-    error.statusCode = 400;
-    throw error;
+  if (!Number.isSafeInteger(id) || id <= 0) {
+    throw createError("Invalid order ID", 400);
   }
 
-  const allowedStatuses = [
-    "PENDING",
-    "CONFIRMED",
-    "SHIPPED",
-    "DELIVERED",
-    "CANCELLED",
-  ];
-
-  if (!allowedStatuses.includes(newStatus)) {
-    const error = new Error("Invalid order status");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  const order = await prisma.order.findUnique({
-    where: { id },
-  });
-
-  if (!order) {
-    const error = new Error("Order not found");
-    error.statusCode = 404;
-    throw error;
-  }
-
-  // Prevent invalid status transitions.
   const allowedTransitions = {
     PENDING: ["CONFIRMED", "CANCELLED"],
     CONFIRMED: ["SHIPPED", "CANCELLED"],
@@ -278,30 +311,79 @@ export const changeOrderStatus = async (orderId, newStatus) => {
     CANCELLED: [],
   };
 
-  if (!allowedTransitions[order.status].includes(newStatus)) {
-    const error = new Error(
-      `Cannot change order status from ${order.status} to ${newStatus}`
-    );
-    error.statusCode = 400;
-    throw error;
+  if (!Object.hasOwn(allowedTransitions, newStatus)) {
+    throw createError("Invalid order status", 400);
   }
 
-  return await prisma.order.update({
-    where: { id },
-    data: { status: newStatus },
-    include: {
-      user: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
+  return await prisma.$transaction(async (tx) => {
+    const order = await tx.order.findUnique({
+      where: { id },
+      include: {
+        items: true,
+      },
+    });
+
+    if (!order) {
+      throw createError("Order not found", 404);
+    }
+
+    if (!allowedTransitions[order.status].includes(newStatus)) {
+      throw createError(
+        `Cannot change order status from ${order.status} to ${newStatus}`,
+        400
+      );
+    }
+
+    // Update only if the status has not changed since it was read.
+    const updated = await tx.order.updateMany({
+      where: {
+        id,
+        status: order.status,
+      },
+      data: {
+        status: newStatus,
+      },
+    });
+
+    if (updated.count !== 1) {
+      throw createError(
+        "Order status was changed by another request. Please try again.",
+        409
+      );
+    }
+
+    // Restore reserved stock when an order is cancelled.
+    if (newStatus === "CANCELLED") {
+      for (const item of order.items) {
+        await tx.product.update({
+          where: {
+            id: item.productId,
+          },
+          data: {
+            stock: {
+              increment: item.quantity,
+            },
+          },
+        });
+      }
+    }
+
+    return await tx.order.findUnique({
+      where: { id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+          },
+        },
+        items: {
+          include: {
+            product: true,
+          },
         },
       },
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
+    });
   });
 };

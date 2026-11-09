@@ -1,7 +1,7 @@
 
 import { z } from "zod";
 
-// Product validation schema
+// Create product validation
 export const createProductSchema = z.object({
   name: z
     .string()
@@ -24,14 +24,54 @@ export const createProductSchema = z.object({
     .number()
     .int("Stock must be an integer")
     .positive("Stock must be greater than 0"),
-   
+
   categoryId: z
     .number()
     .int("Category ID must be an integer")
     .positive("Category ID must be greater than 0"),
 
   images: z
-  .array(z.string().url("please provide a valid URL")),
+    .array(z.string().url("Please provide a valid URL"))
+    .optional(),
+
+  isFeatured: z
+    .boolean()
+    .optional(),
 });
 
+// Update product validation
 export const updateProductSchema = createProductSchema.partial();
+
+// Set featured status validation
+export const setProductFeaturedSchema = z.object({
+  isFeatured: z.boolean({
+    error: "isFeatured must be a boolean",
+  }),
+});
+
+// Set product discount validation
+export const setProductDiscountSchema = z.object({
+  type: z.enum(["PERCENTAGE", "FIXED"], {
+    error: "Discount type must be PERCENTAGE or FIXED",
+  }),
+
+  value: z
+    .number()
+    .positive("Discount value must be greater than 0"),
+
+  startsAt: z
+    .string()
+    .datetime("Please provide a valid start date")
+    .optional()
+    .nullable(),
+
+  endsAt: z
+    .string()
+    .datetime("Please provide a valid end date")
+    .optional()
+    .nullable(),
+
+  isActive: z
+    .boolean()
+    .optional(),
+});
