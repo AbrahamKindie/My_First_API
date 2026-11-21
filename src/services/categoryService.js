@@ -1,168 +1,200 @@
 
 import prisma from "../db/prisma.js";
-import { z } from "zod";
-import {
-  createCategorySchema,
-  updateCategorySchema,
-} from "../validators/categoryValidation.js";
 
-// Helper for consistent errors
-const createError = (message, statusCode, details) => {
+// ==========================================
+// REUSABLE HELPERS
+// ==========================================
+
+const createError = (message, statusCode = 400) => {
   const error = new Error(message);
   error.statusCode = statusCode;
-
-  if (details) {
-    error.details = details;
-  }
-
   return error;
 };
 
-// 1. Create Category
-export const createCategory = async (data) => {
-  const result = createCategorySchema.safeParse(data);
+const validateCategoryId = (id) => {
+  const categoryId = Number(id);
 
-  if (!result.success) {
-    throw createError(
-      "Validation failed",
-      400,
-      result.error.issues.map((issue) => ({
-        field: issue.path.join("."),
-        message: issue.message,
-      }))
-    );
+  if (!Number.isInteger(categoryId) || categoryId <= 0) {
+    throw createError("Invalid category ID", 400);
   }
 
-  try {
-    return await prisma.category.create({
-      data: {
-        name: result.data.name,
-      },
-    });
-  } catch (error) {
-    if (error.code === "P2002") {
-      throw createError("Category name already exists", 409);
-    }
-
-    throw error;
-  }
+  return categoryId;
 };
 
-// 2. Get All Categories with Products and Total Products
-export const getAllCategories = async () => {
-  const categories = await prisma.category.findMany({
+// ==========================================
+// PUBLIC CATEGORY SELECT
+//
+// All shop categories are returned.
+// Only active shops are included.
+// Only active products are counted.
+// ==========================================
+
+const publicCategorySelect = {
+  id: true,
+  name: true,
+  description: true,
+  image: true,
+
+  shops: {
+    where: {
+      status: "ACTIVE",
+    },
+
     orderBy: {
-      createdAt: "desc",
+      name: "asc",
     },
-    include: {
+
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      logo: true,
+      coverImage: true,
+      address: true,
+      city: true,
+      region: true,
+      status: true,
+
       _count: {
         select: {
-          products: true,
+          products: {
+            where: {
+              status: "ACTIVE",
+            },
+          },
         },
       },
-       products: true,
-    },
-  });
 
-  return categories;
-}
+      productCategories: {
+        orderBy: {
+          name: "asc",
+        },
 
-// 3. Get Category By ID with Products and Total Products
-export const getCategoryById = async (id) => {
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid category ID", 400);
-  }
-
-  const category = await prisma.category.findUnique({
-    where: { id },
-    include: {
-      _count: {
         select: {
-          products: true,
+          id: true,
+          name: true,
+          description: true,
+
+          _count: {
+            select: {
+              products: {
+                where: {
+                  status: "ACTIVE",
+                },
+              },
+            },
+          },
         },
       },
-        products: true,
     },
-  });
-
-  if (!category) {
-    throw createError("Category not found", 404);
-  }
-
-//const { _count, products, ...categoryData } = category;
-
-return category;
-}
-
-// 4. Update Category (unchanged)
-export const updateCategory = async (id, data) => {
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid category ID", 400);
-  }
-
-  const result = updateCategorySchema.safeParse(data);
-
-  if (!result.success) {
-    throw createError(
-      "Validation failed",
-      400,
-      result.error.issues.map((issue) => ({
-        field: issue.path.join("."),
-        message: issue.message,
-      }))
-    );
-  }
-
-  const category = await prisma.category.findUnique({
-    where: { id },
-  });
-
-  if (!category) {
-    throw createError("Category not found", 404);
-  }
-
-  try {
-    return await prisma.category.update({
-      where: { id },
-      data: {
-        name: result.data.name,
-      },
-    });
-  } catch (error) {
-    if (error.code === "P2002") {
-      throw createError("Category name already exists", 409);
-    }
-
-    throw error;
-  }
+  },
 };
 
-// 5. Delete Category (unchanged)
-export const deleteCategory = async (id) => {
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid category ID", 400);
-  }
+// ==========================================
+// FORMAT CATEGORY COUNTS
+// ==========================================
 
-  const category = await prisma.category.findUnique({
-    where: { id },
+const formatCategoryCounts = (category) => {
+  const shops = (category.shops || []).map((shop) => {
+    const productsCount = shop._count?.products || 0;
+
+    const productCategories = (
+      shop.productCategories || []
+    ).map((productCategory) => ({
+      id: productCategory.id,
+      name: productCategory.name,
+      description: productCategory.description,
+      productsCount:
+        productCategory._count?.products || 0,
+    }));
+
+    return {
+      id: shop.id,
+      name: shop.name,
+      description: shop.description,
+      logo: shop.logo,
+      coverImage: shop.coverImage,
+      address: shop.address,
+      city: shop.city,
+      region: shop.region,
+      status: shop.status,
+
+      productsCount,
+      productCategories,
+    };
+  });
+
+  // Count unique product category names across active shops.
+  const uniqueProductCategories = new Set();
+
+  shops.forEach((shop) => {
+    shop.productCategories.forEach((productCategory) => {
+      const normalizedName = String(
+        productCategory.name || ""
+      )
+        .trim()
+        .toLowerCase();
+
+      if (normalizedName) {
+        uniqueProductCategories.add(normalizedName);
+      }
+    });
+  });
+
+  // Total active products across all active shops.
+  const productsCount = shops.reduce(
+    (total, shop) => total + shop.productsCount,
+    0
+  );
+
+  return {
+    id: category.id,
+    name: category.name,
+    description: category.description,
+    image: category.image,
+
+    shopsCount: shops.length,
+    productCategoriesCount: uniqueProductCategories.size,
+    productsCount,
+
+    shops,
+  };
+};
+
+// ==========================================
+// GET ALL SHOP CATEGORIES
+// ==========================================
+
+export const getAllCategories = async () => {
+  const categories = await prisma.shopCategory.findMany({
+    orderBy: {
+      name: "asc",
+    },
+
+    select: publicCategorySelect,
+  });
+
+  return categories.map(formatCategoryCounts);
+};
+
+// ==========================================
+// GET SHOP CATEGORY BY ID
+// ==========================================
+
+export const getCategoryById = async (id) => {
+  const categoryId = validateCategoryId(id);
+
+  const category = await prisma.shopCategory.findUnique({
+    where: {
+      id: categoryId,
+    },
+
+    select: publicCategorySelect,
   });
 
   if (!category) {
-    throw createError("Category not found", 404);
+    throw createError("Shop category not found", 404);
   }
 
-  try {
-    return await prisma.category.delete({
-      where: { id },
-    });
-  } catch (error) {
-    if (error.code === "P2003" || error.code === "P2014") {
-      throw createError(
-        "Cannot delete this category because it has related products. Please remove or reassign those products first.",
-        409
-      );
-    }
-
-    throw error;
-  }
+  return formatCategoryCounts(category);
 };

@@ -31,8 +31,8 @@ export * from "./enums.ts"
  * const prisma = new PrismaClient({
  *   adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL })
  * })
- * // Fetch zero or more Users
- * const users = await prisma.user.findMany()
+ * // Fetch zero or more AdminPermissions
+ * const adminPermissions = await prisma.adminPermission.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -42,20 +42,55 @@ export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts exten
 export { Prisma }
 
 /**
+ * Model AdminPermission
+ * 
+ */
+export type AdminPermission = Prisma.AdminPermissionModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
- * Model Category
+ * Model AdminRole
  * 
  */
-export type Category = Prisma.CategoryModel
+export type AdminRole = Prisma.AdminRoleModel
+/**
+ * Model AdminRolePermission
+ * 
+ */
+export type AdminRolePermission = Prisma.AdminRolePermissionModel
+/**
+ * Model AdminActivityLog
+ * 
+ */
+export type AdminActivityLog = Prisma.AdminActivityLogModel
+/**
+ * Model ShopCategory
+ * 
+ */
+export type ShopCategory = Prisma.ShopCategoryModel
+/**
+ * Model ProductCategory
+ * 
+ */
+export type ProductCategory = Prisma.ProductCategoryModel
 /**
  * Model Product
  * 
  */
 export type Product = Prisma.ProductModel
+/**
+ * Model ProductLike
+ * 
+ */
+export type ProductLike = Prisma.ProductLikeModel
+/**
+ * Model ProductReport
+ * 
+ */
+export type ProductReport = Prisma.ProductReportModel
 /**
  * Model ProductDiscount
  * 
@@ -86,3 +121,18 @@ export type Cart = Prisma.CartModel
  * 
  */
 export type CartItem = Prisma.CartItemModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Shop
+ * 
+ */
+export type Shop = Prisma.ShopModel
+/**
+ * Model OrderEmailJob
+ * 
+ */
+export type OrderEmailJob = Prisma.OrderEmailJobModel

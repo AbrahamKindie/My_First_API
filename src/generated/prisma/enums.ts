@@ -11,7 +11,9 @@
 
 export const Role = {
   USER: 'USER',
-  ADMIN: 'ADMIN'
+  SHOP_OWNER: 'SHOP_OWNER',
+  ADMIN: 'ADMIN',
+  SUPER_ADMIN: 'SUPER_ADMIN'
 } as const
 
 export type Role = (typeof Role)[keyof typeof Role]
@@ -23,6 +25,14 @@ export const DiscountType = {
 } as const
 
 export type DiscountType = (typeof DiscountType)[keyof typeof DiscountType]
+
+
+export const ProductStatus = {
+  ACTIVE: 'ACTIVE',
+  ADMIN_DEACTIVATED: 'ADMIN_DEACTIVATED'
+} as const
+
+export type ProductStatus = (typeof ProductStatus)[keyof typeof ProductStatus]
 
 
 export const OrderStatus = {
@@ -43,3 +53,83 @@ export const CartStatus = {
 } as const
 
 export type CartStatus = (typeof CartStatus)[keyof typeof CartStatus]
+
+
+export const PaymentMethod = {
+  CASH_ON_DELIVERY: 'CASH_ON_DELIVERY',
+  CHAPA: 'CHAPA'
+} as const
+
+export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
+
+
+export const PaymentStatus = {
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
+} as const
+
+export type PaymentStatus = (typeof PaymentStatus)[keyof typeof PaymentStatus]
+
+
+export const ShopStatus = {
+  ACTIVE: 'ACTIVE',
+  DEACTIVATED: 'DEACTIVATED'
+} as const
+
+export type ShopStatus = (typeof ShopStatus)[keyof typeof ShopStatus]
+
+
+export const ProductReportStatus = {
+  PENDING: 'PENDING',
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  RESOLVED: 'RESOLVED',
+  DISMISSED: 'DISMISSED'
+} as const
+
+export type ProductReportStatus = (typeof ProductReportStatus)[keyof typeof ProductReportStatus]
+
+
+export const ProductReportReason = {
+  COUNTERFEIT: 'COUNTERFEIT',
+  MISLEADING_INFORMATION: 'MISLEADING_INFORMATION',
+  PROHIBITED_PRODUCT: 'PROHIBITED_PRODUCT',
+  SUSPICIOUS_ACTIVITY: 'SUSPICIOUS_ACTIVITY',
+  OTHER: 'OTHER'
+} as const
+
+export type ProductReportReason = (typeof ProductReportReason)[keyof typeof ProductReportReason]
+
+
+export const NotificationType = {
+  FEATURED_PRODUCT: 'FEATURED_PRODUCT',
+  NEW_DISCOUNT: 'NEW_DISCOUNT',
+  DISCOUNT_ENDING_SOON: 'DISCOUNT_ENDING_SOON',
+  NEW_ARRIVAL: 'NEW_ARRIVAL',
+  SHOP_APPLICATION_REJECTED: 'SHOP_APPLICATION_REJECTED',
+  ORDER_PENDING_REMINDER: 'ORDER_PENDING_REMINDER',
+  ORDER_AUTO_CANCELLED: 'ORDER_AUTO_CANCELLED',
+  ORDER_CANCELLED_BY_CUSTOMER: 'ORDER_CANCELLED_BY_CUSTOMER'
+} as const
+
+export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
+
+
+export const OrderEmailJobType = {
+  PENDING_REMINDER: 'PENDING_REMINDER',
+  AUTO_CANCELLATION: 'AUTO_CANCELLATION',
+  CUSTOMER_CANCELLATION: 'CUSTOMER_CANCELLATION'
+} as const
+
+export type OrderEmailJobType = (typeof OrderEmailJobType)[keyof typeof OrderEmailJobType]
+
+
+export const EmailJobStatus = {
+  PENDING: 'PENDING',
+  PROCESSING: 'PROCESSING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type EmailJobStatus = (typeof EmailJobStatus)[keyof typeof EmailJobStatus]

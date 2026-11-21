@@ -1,0 +1,5 @@
+-- AlterEnum
+ALTER TYPE "AdminPermission" ADD VALUE 'VIEW_ACTIVITY_LOGS';
+
+-- AlterEnum
+ALTER TYPE "OrderEmailJobType" ADD VALUE 'CUSTOMER_CANCELLATION';

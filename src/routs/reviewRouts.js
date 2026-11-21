@@ -12,17 +12,30 @@ import {
   createReviewController,
   getProductReviewsController,
   updateReviewController,
-  deleteReviewController,
 } from "../controllers/reviewControllers.js";
 
 const router = Router();
 
-// Product reviews
-router.get("/product/:productId", authenticate, getProductReviewsController);
-router.post("/product/:productId", authenticate, validate(createReviewSchema), createReviewController);
+// Get product reviews (public)
+router.get(
+  "/product/:productId",
+  getProductReviewsController
+);
 
-// Manage own reviews
-router.patch("/:id", authenticate, validate(updateReviewSchema), updateReviewController);
-router.delete("/:id", authenticate, deleteReviewController);
+// Create review (authenticated users only)
+router.post(
+  "/product/:productId",
+  authenticate,
+  validate(createReviewSchema),
+  createReviewController
+);
+
+// Update own review (authenticated users only)
+router.patch(
+  "/:id",
+  authenticate,
+  validate(updateReviewSchema),
+  updateReviewController
+);
 
 export default router;

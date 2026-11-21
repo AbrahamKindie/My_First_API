@@ -29,11 +29,13 @@ export type AggregateUser = {
 export type UserAvgAggregateOutputType = {
   id: number | null
   sort_order: number | null
+  adminRoleId: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
   sort_order: number | null
+  adminRoleId: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -52,8 +54,12 @@ export type UserMinAggregateOutputType = {
   isVerified: boolean | null
   isActive: boolean | null
   role: $Enums.Role | null
+  adminRoleId: number | null
   resetPasswordToken: string | null
   resetPasswordExpires: Date | null
+  adminPasswordSetupToken: string | null
+  adminPasswordSetupExpires: Date | null
+  adminPasswordSetupCompleted: boolean | null
   refreshToken: string | null
   refreshTokenExpiry: Date | null
   createdAt: Date | null
@@ -76,8 +82,12 @@ export type UserMaxAggregateOutputType = {
   isVerified: boolean | null
   isActive: boolean | null
   role: $Enums.Role | null
+  adminRoleId: number | null
   resetPasswordToken: string | null
   resetPasswordExpires: Date | null
+  adminPasswordSetupToken: string | null
+  adminPasswordSetupExpires: Date | null
+  adminPasswordSetupCompleted: boolean | null
   refreshToken: string | null
   refreshTokenExpiry: Date | null
   createdAt: Date | null
@@ -100,8 +110,12 @@ export type UserCountAggregateOutputType = {
   isVerified: number
   isActive: number
   role: number
+  adminRoleId: number
   resetPasswordToken: number
   resetPasswordExpires: number
+  adminPasswordSetupToken: number
+  adminPasswordSetupExpires: number
+  adminPasswordSetupCompleted: number
   refreshToken: number
   refreshTokenExpiry: number
   createdAt: number
@@ -113,11 +127,13 @@ export type UserCountAggregateOutputType = {
 export type UserAvgAggregateInputType = {
   id?: true
   sort_order?: true
+  adminRoleId?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
   sort_order?: true
+  adminRoleId?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -136,8 +152,12 @@ export type UserMinAggregateInputType = {
   isVerified?: true
   isActive?: true
   role?: true
+  adminRoleId?: true
   resetPasswordToken?: true
   resetPasswordExpires?: true
+  adminPasswordSetupToken?: true
+  adminPasswordSetupExpires?: true
+  adminPasswordSetupCompleted?: true
   refreshToken?: true
   refreshTokenExpiry?: true
   createdAt?: true
@@ -160,8 +180,12 @@ export type UserMaxAggregateInputType = {
   isVerified?: true
   isActive?: true
   role?: true
+  adminRoleId?: true
   resetPasswordToken?: true
   resetPasswordExpires?: true
+  adminPasswordSetupToken?: true
+  adminPasswordSetupExpires?: true
+  adminPasswordSetupCompleted?: true
   refreshToken?: true
   refreshTokenExpiry?: true
   createdAt?: true
@@ -184,8 +208,12 @@ export type UserCountAggregateInputType = {
   isVerified?: true
   isActive?: true
   role?: true
+  adminRoleId?: true
   resetPasswordToken?: true
   resetPasswordExpires?: true
+  adminPasswordSetupToken?: true
+  adminPasswordSetupExpires?: true
+  adminPasswordSetupCompleted?: true
   refreshToken?: true
   refreshTokenExpiry?: true
   createdAt?: true
@@ -286,8 +314,8 @@ export type UserGroupByOutputType = {
   password: string
   sort_order: number
   phone: string | null
-  dateOfBirth: Date | null
-  gender: string | null
+  dateOfBirth: Date
+  gender: string
   address: string | null
   city: string | null
   country: string | null
@@ -295,8 +323,12 @@ export type UserGroupByOutputType = {
   isVerified: boolean
   isActive: boolean
   role: $Enums.Role
+  adminRoleId: number | null
   resetPasswordToken: string | null
   resetPasswordExpires: Date | null
+  adminPasswordSetupToken: string | null
+  adminPasswordSetupExpires: Date | null
+  adminPasswordSetupCompleted: boolean
   refreshToken: string | null
   refreshTokenExpiry: Date | null
   createdAt: Date
@@ -333,8 +365,8 @@ export type UserWhereInput = {
   password?: Prisma.StringFilter<"User"> | string
   sort_order?: Prisma.IntFilter<"User"> | number
   phone?: Prisma.StringNullableFilter<"User"> | string | null
-  dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeFilter<"User"> | Date | string
+  gender?: Prisma.StringFilter<"User"> | string
   address?: Prisma.StringNullableFilter<"User"> | string | null
   city?: Prisma.StringNullableFilter<"User"> | string | null
   country?: Prisma.StringNullableFilter<"User"> | string | null
@@ -342,15 +374,26 @@ export type UserWhereInput = {
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  adminRoleId?: Prisma.IntNullableFilter<"User"> | number | null
   resetPasswordToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupToken?: Prisma.StringNullableFilter<"User"> | string | null
+  adminPasswordSetupExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFilter<"User"> | boolean
   refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   refreshTokenExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminRole?: Prisma.XOR<Prisma.AdminRoleNullableScalarRelationFilter, Prisma.AdminRoleWhereInput> | null
   orders?: Prisma.OrderListRelationFilter
   carts?: Prisma.CartListRelationFilter
   reviews?: Prisma.ProductReviewListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
+  shop?: Prisma.XOR<Prisma.ShopNullableScalarRelationFilter, Prisma.ShopWhereInput> | null
+  adminActivityLogs?: Prisma.AdminActivityLogListRelationFilter
+  productLikes?: Prisma.ProductLikeListRelationFilter
+  productReports?: Prisma.ProductReportListRelationFilter
+  reviewedProductReports?: Prisma.ProductReportListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -360,8 +403,8 @@ export type UserOrderByWithRelationInput = {
   password?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -369,29 +412,41 @@ export type UserOrderByWithRelationInput = {
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordToken?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupCompleted?: Prisma.SortOrder
   refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminRole?: Prisma.AdminRoleOrderByWithRelationInput
   orders?: Prisma.OrderOrderByRelationAggregateInput
   carts?: Prisma.CartOrderByRelationAggregateInput
   reviews?: Prisma.ProductReviewOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  shop?: Prisma.ShopOrderByWithRelationInput
+  adminActivityLogs?: Prisma.AdminActivityLogOrderByRelationAggregateInput
+  productLikes?: Prisma.ProductLikeOrderByRelationAggregateInput
+  productReports?: Prisma.ProductReportOrderByRelationAggregateInput
+  reviewedProductReports?: Prisma.ProductReportOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: number
   email?: string
   phone?: string
+  adminPasswordSetupToken?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringFilter<"User"> | string
   password?: Prisma.StringFilter<"User"> | string
   sort_order?: Prisma.IntFilter<"User"> | number
-  dateOfBirth?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
-  gender?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeFilter<"User"> | Date | string
+  gender?: Prisma.StringFilter<"User"> | string
   address?: Prisma.StringNullableFilter<"User"> | string | null
   city?: Prisma.StringNullableFilter<"User"> | string | null
   country?: Prisma.StringNullableFilter<"User"> | string | null
@@ -399,16 +454,26 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   isVerified?: Prisma.BoolFilter<"User"> | boolean
   isActive?: Prisma.BoolFilter<"User"> | boolean
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  adminRoleId?: Prisma.IntNullableFilter<"User"> | number | null
   resetPasswordToken?: Prisma.StringNullableFilter<"User"> | string | null
   resetPasswordExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFilter<"User"> | boolean
   refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
   refreshTokenExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminRole?: Prisma.XOR<Prisma.AdminRoleNullableScalarRelationFilter, Prisma.AdminRoleWhereInput> | null
   orders?: Prisma.OrderListRelationFilter
   carts?: Prisma.CartListRelationFilter
   reviews?: Prisma.ProductReviewListRelationFilter
-}, "id" | "email" | "phone">
+  notifications?: Prisma.NotificationListRelationFilter
+  shop?: Prisma.XOR<Prisma.ShopNullableScalarRelationFilter, Prisma.ShopWhereInput> | null
+  adminActivityLogs?: Prisma.AdminActivityLogListRelationFilter
+  productLikes?: Prisma.ProductLikeListRelationFilter
+  productReports?: Prisma.ProductReportListRelationFilter
+  reviewedProductReports?: Prisma.ProductReportListRelationFilter
+}, "id" | "email" | "phone" | "adminPasswordSetupToken">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -417,8 +482,8 @@ export type UserOrderByWithAggregationInput = {
   password?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
-  dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrderInput | Prisma.SortOrder
+  dateOfBirth?: Prisma.SortOrder
+  gender?: Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
   country?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -426,8 +491,12 @@ export type UserOrderByWithAggregationInput = {
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordToken?: Prisma.SortOrderInput | Prisma.SortOrder
   resetPasswordExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupToken?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupExpires?: Prisma.SortOrderInput | Prisma.SortOrder
+  adminPasswordSetupCompleted?: Prisma.SortOrder
   refreshToken?: Prisma.SortOrderInput | Prisma.SortOrder
   refreshTokenExpiry?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -449,8 +518,8 @@ export type UserScalarWhereWithAggregatesInput = {
   password?: Prisma.StringWithAggregatesFilter<"User"> | string
   sort_order?: Prisma.IntWithAggregatesFilter<"User"> | number
   phone?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
-  gender?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
+  gender?: Prisma.StringWithAggregatesFilter<"User"> | string
   address?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   country?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -458,8 +527,12 @@ export type UserScalarWhereWithAggregatesInput = {
   isVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isActive?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
+  adminRoleId?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   resetPasswordToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   resetPasswordExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  adminPasswordSetupToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  adminPasswordSetupExpires?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   refreshToken?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   refreshTokenExpiry?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -470,10 +543,10 @@ export type UserCreateInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -483,13 +556,23 @@ export type UserCreateInput = {
   role?: $Enums.Role
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -497,10 +580,10 @@ export type UserUncheckedCreateInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -508,8 +591,12 @@ export type UserUncheckedCreateInput = {
   isVerified?: boolean
   isActive?: boolean
   role?: $Enums.Role
+  adminRoleId?: number | null
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
@@ -517,6 +604,12 @@ export type UserUncheckedCreateInput = {
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUpdateInput = {
@@ -525,8 +618,8 @@ export type UserUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -536,13 +629,23 @@ export type UserUpdateInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -552,8 +655,8 @@ export type UserUncheckedUpdateInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -561,8 +664,12 @@ export type UserUncheckedUpdateInput = {
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -570,6 +677,12 @@ export type UserUncheckedUpdateInput = {
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -577,10 +690,10 @@ export type UserCreateManyInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -588,8 +701,12 @@ export type UserCreateManyInput = {
   isVerified?: boolean
   isActive?: boolean
   role?: $Enums.Role
+  adminRoleId?: number | null
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
@@ -602,8 +719,8 @@ export type UserUpdateManyMutationInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -613,6 +730,9 @@ export type UserUpdateManyMutationInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -626,8 +746,8 @@ export type UserUncheckedUpdateManyInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -635,8 +755,12 @@ export type UserUncheckedUpdateManyInput = {
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -659,8 +783,12 @@ export type UserCountOrderByAggregateInput = {
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrder
   resetPasswordToken?: Prisma.SortOrder
   resetPasswordExpires?: Prisma.SortOrder
+  adminPasswordSetupToken?: Prisma.SortOrder
+  adminPasswordSetupExpires?: Prisma.SortOrder
+  adminPasswordSetupCompleted?: Prisma.SortOrder
   refreshToken?: Prisma.SortOrder
   refreshTokenExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -670,6 +798,7 @@ export type UserCountOrderByAggregateInput = {
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -688,8 +817,12 @@ export type UserMaxOrderByAggregateInput = {
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrder
   resetPasswordToken?: Prisma.SortOrder
   resetPasswordExpires?: Prisma.SortOrder
+  adminPasswordSetupToken?: Prisma.SortOrder
+  adminPasswordSetupExpires?: Prisma.SortOrder
+  adminPasswordSetupCompleted?: Prisma.SortOrder
   refreshToken?: Prisma.SortOrder
   refreshTokenExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -712,8 +845,12 @@ export type UserMinOrderByAggregateInput = {
   isVerified?: Prisma.SortOrder
   isActive?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrder
   resetPasswordToken?: Prisma.SortOrder
   resetPasswordExpires?: Prisma.SortOrder
+  adminPasswordSetupToken?: Prisma.SortOrder
+  adminPasswordSetupExpires?: Prisma.SortOrder
+  adminPasswordSetupCompleted?: Prisma.SortOrder
   refreshToken?: Prisma.SortOrder
   refreshTokenExpiry?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -723,6 +860,22 @@ export type UserMinOrderByAggregateInput = {
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
   sort_order?: Prisma.SortOrder
+  adminRoleId?: Prisma.SortOrder
+}
+
+export type UserListRelationFilter = {
+  every?: Prisma.UserWhereInput
+  some?: Prisma.UserWhereInput
+  none?: Prisma.UserWhereInput
+}
+
+export type UserOrderByRelationAggregateInput = {
+  _count?: Prisma.SortOrder
+}
+
+export type UserNullableScalarRelationFilter = {
+  is?: Prisma.UserWhereInput | null
+  isNot?: Prisma.UserWhereInput | null
 }
 
 export type UserScalarRelationFilter = {
@@ -730,36 +883,122 @@ export type UserScalarRelationFilter = {
   isNot?: Prisma.UserWhereInput
 }
 
-export type StringFieldUpdateOperationsInput = {
-  set?: string
-}
-
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
-export type NullableStringFieldUpdateOperationsInput = {
-  set?: string | null
+export type EnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role
 }
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
 }
 
-export type BoolFieldUpdateOperationsInput = {
-  set?: boolean
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
-export type EnumRoleFieldUpdateOperationsInput = {
-  set?: $Enums.Role
+export type UserCreateNestedManyWithoutAdminRoleInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput> | Prisma.UserCreateWithoutAdminRoleInput[] | Prisma.UserUncheckedCreateWithoutAdminRoleInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminRoleInput | Prisma.UserCreateOrConnectWithoutAdminRoleInput[]
+  createMany?: Prisma.UserCreateManyAdminRoleInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
 }
 
-export type DateTimeFieldUpdateOperationsInput = {
-  set?: Date | string
+export type UserUncheckedCreateNestedManyWithoutAdminRoleInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput> | Prisma.UserCreateWithoutAdminRoleInput[] | Prisma.UserUncheckedCreateWithoutAdminRoleInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminRoleInput | Prisma.UserCreateOrConnectWithoutAdminRoleInput[]
+  createMany?: Prisma.UserCreateManyAdminRoleInputEnvelope
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+}
+
+export type UserUpdateManyWithoutAdminRoleNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput> | Prisma.UserCreateWithoutAdminRoleInput[] | Prisma.UserUncheckedCreateWithoutAdminRoleInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminRoleInput | Prisma.UserCreateOrConnectWithoutAdminRoleInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutAdminRoleInput | Prisma.UserUpsertWithWhereUniqueWithoutAdminRoleInput[]
+  createMany?: Prisma.UserCreateManyAdminRoleInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutAdminRoleInput | Prisma.UserUpdateWithWhereUniqueWithoutAdminRoleInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutAdminRoleInput | Prisma.UserUpdateManyWithWhereWithoutAdminRoleInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserUncheckedUpdateManyWithoutAdminRoleNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput> | Prisma.UserCreateWithoutAdminRoleInput[] | Prisma.UserUncheckedCreateWithoutAdminRoleInput[]
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminRoleInput | Prisma.UserCreateOrConnectWithoutAdminRoleInput[]
+  upsert?: Prisma.UserUpsertWithWhereUniqueWithoutAdminRoleInput | Prisma.UserUpsertWithWhereUniqueWithoutAdminRoleInput[]
+  createMany?: Prisma.UserCreateManyAdminRoleInputEnvelope
+  set?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  disconnect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  delete?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  connect?: Prisma.UserWhereUniqueInput | Prisma.UserWhereUniqueInput[]
+  update?: Prisma.UserUpdateWithWhereUniqueWithoutAdminRoleInput | Prisma.UserUpdateWithWhereUniqueWithoutAdminRoleInput[]
+  updateMany?: Prisma.UserUpdateManyWithWhereWithoutAdminRoleInput | Prisma.UserUpdateManyWithWhereWithoutAdminRoleInput[]
+  deleteMany?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+}
+
+export type UserCreateNestedOneWithoutAdminActivityLogsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminActivityLogsInput, Prisma.UserUncheckedCreateWithoutAdminActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminActivityLogsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAdminActivityLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAdminActivityLogsInput, Prisma.UserUncheckedCreateWithoutAdminActivityLogsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAdminActivityLogsInput
+  upsert?: Prisma.UserUpsertWithoutAdminActivityLogsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAdminActivityLogsInput, Prisma.UserUpdateWithoutAdminActivityLogsInput>, Prisma.UserUncheckedUpdateWithoutAdminActivityLogsInput>
+}
+
+export type UserCreateNestedOneWithoutProductLikesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductLikesInput, Prisma.UserUncheckedCreateWithoutProductLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProductLikesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductLikesInput, Prisma.UserUncheckedCreateWithoutProductLikesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductLikesInput
+  upsert?: Prisma.UserUpsertWithoutProductLikesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductLikesInput, Prisma.UserUpdateWithoutProductLikesInput>, Prisma.UserUncheckedUpdateWithoutProductLikesInput>
+}
+
+export type UserCreateNestedOneWithoutProductReportsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductReportsInput, Prisma.UserUncheckedCreateWithoutProductReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductReportsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewedProductReportsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedProductReportsInput, Prisma.UserUncheckedCreateWithoutReviewedProductReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedProductReportsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutProductReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutProductReportsInput, Prisma.UserUncheckedCreateWithoutProductReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutProductReportsInput
+  upsert?: Prisma.UserUpsertWithoutProductReportsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutProductReportsInput, Prisma.UserUpdateWithoutProductReportsInput>, Prisma.UserUncheckedUpdateWithoutProductReportsInput>
+}
+
+export type UserUpdateOneWithoutReviewedProductReportsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewedProductReportsInput, Prisma.UserUncheckedCreateWithoutReviewedProductReportsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewedProductReportsInput
+  upsert?: Prisma.UserUpsertWithoutReviewedProductReportsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewedProductReportsInput, Prisma.UserUpdateWithoutReviewedProductReportsInput>, Prisma.UserUncheckedUpdateWithoutReviewedProductReportsInput>
 }
 
 export type UserCreateNestedOneWithoutReviewsInput = {
@@ -804,14 +1043,42 @@ export type UserUpdateOneRequiredWithoutCartsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCartsInput, Prisma.UserUpdateWithoutCartsInput>, Prisma.UserUncheckedUpdateWithoutCartsInput>
 }
 
-export type UserCreateWithoutReviewsInput = {
+export type UserCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.UserUpsertWithoutNotificationsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserCreateNestedOneWithoutShopInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutShopInput, Prisma.UserUncheckedCreateWithoutShopInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShopInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutShopNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutShopInput, Prisma.UserUncheckedCreateWithoutShopInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutShopInput
+  upsert?: Prisma.UserUpsertWithoutShopInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShopInput, Prisma.UserUpdateWithoutShopInput>, Prisma.UserUncheckedUpdateWithoutShopInput>
+}
+
+export type UserCreateWithoutAdminRoleInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -821,12 +1088,782 @@ export type UserCreateWithoutReviewsInput = {
   role?: $Enums.Role
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutAdminRoleInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutAdminRoleInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput>
+}
+
+export type UserCreateManyAdminRoleInputEnvelope = {
+  data: Prisma.UserCreateManyAdminRoleInput | Prisma.UserCreateManyAdminRoleInput[]
+  skipDuplicates?: boolean
+}
+
+export type UserUpsertWithWhereUniqueWithoutAdminRoleInput = {
+  where: Prisma.UserWhereUniqueInput
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAdminRoleInput, Prisma.UserUncheckedUpdateWithoutAdminRoleInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminRoleInput, Prisma.UserUncheckedCreateWithoutAdminRoleInput>
+}
+
+export type UserUpdateWithWhereUniqueWithoutAdminRoleInput = {
+  where: Prisma.UserWhereUniqueInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAdminRoleInput, Prisma.UserUncheckedUpdateWithoutAdminRoleInput>
+}
+
+export type UserUpdateManyWithWhereWithoutAdminRoleInput = {
+  where: Prisma.UserScalarWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateManyMutationInput, Prisma.UserUncheckedUpdateManyWithoutAdminRoleInput>
+}
+
+export type UserScalarWhereInput = {
+  AND?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  OR?: Prisma.UserScalarWhereInput[]
+  NOT?: Prisma.UserScalarWhereInput | Prisma.UserScalarWhereInput[]
+  id?: Prisma.IntFilter<"User"> | number
+  name?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringFilter<"User"> | string
+  password?: Prisma.StringFilter<"User"> | string
+  sort_order?: Prisma.IntFilter<"User"> | number
+  phone?: Prisma.StringNullableFilter<"User"> | string | null
+  dateOfBirth?: Prisma.DateTimeFilter<"User"> | Date | string
+  gender?: Prisma.StringFilter<"User"> | string
+  address?: Prisma.StringNullableFilter<"User"> | string | null
+  city?: Prisma.StringNullableFilter<"User"> | string | null
+  country?: Prisma.StringNullableFilter<"User"> | string | null
+  profileImage?: Prisma.StringNullableFilter<"User"> | string | null
+  isVerified?: Prisma.BoolFilter<"User"> | boolean
+  isActive?: Prisma.BoolFilter<"User"> | boolean
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
+  adminRoleId?: Prisma.IntNullableFilter<"User"> | number | null
+  resetPasswordToken?: Prisma.StringNullableFilter<"User"> | string | null
+  resetPasswordExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupToken?: Prisma.StringNullableFilter<"User"> | string | null
+  adminPasswordSetupExpires?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFilter<"User"> | boolean
+  refreshToken?: Prisma.StringNullableFilter<"User"> | string | null
+  refreshTokenExpiry?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  updatedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+}
+
+export type UserCreateWithoutAdminActivityLogsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutAdminActivityLogsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutAdminActivityLogsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminActivityLogsInput, Prisma.UserUncheckedCreateWithoutAdminActivityLogsInput>
+}
+
+export type UserUpsertWithoutAdminActivityLogsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAdminActivityLogsInput, Prisma.UserUncheckedUpdateWithoutAdminActivityLogsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAdminActivityLogsInput, Prisma.UserUncheckedCreateWithoutAdminActivityLogsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAdminActivityLogsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAdminActivityLogsInput, Prisma.UserUncheckedUpdateWithoutAdminActivityLogsInput>
+}
+
+export type UserUpdateWithoutAdminActivityLogsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAdminActivityLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutProductLikesInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutProductLikesInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutProductLikesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductLikesInput, Prisma.UserUncheckedCreateWithoutProductLikesInput>
+}
+
+export type UserUpsertWithoutProductLikesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProductLikesInput, Prisma.UserUncheckedUpdateWithoutProductLikesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductLikesInput, Prisma.UserUncheckedCreateWithoutProductLikesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProductLikesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProductLikesInput, Prisma.UserUncheckedUpdateWithoutProductLikesInput>
+}
+
+export type UserUpdateWithoutProductLikesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProductLikesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutProductReportsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutProductReportsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutProductReportsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductReportsInput, Prisma.UserUncheckedCreateWithoutProductReportsInput>
+}
+
+export type UserCreateWithoutReviewedProductReportsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+}
+
+export type UserUncheckedCreateWithoutReviewedProductReportsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+}
+
+export type UserCreateOrConnectWithoutReviewedProductReportsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedProductReportsInput, Prisma.UserUncheckedCreateWithoutReviewedProductReportsInput>
+}
+
+export type UserUpsertWithoutProductReportsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutProductReportsInput, Prisma.UserUncheckedUpdateWithoutProductReportsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutProductReportsInput, Prisma.UserUncheckedCreateWithoutProductReportsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutProductReportsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutProductReportsInput, Prisma.UserUncheckedUpdateWithoutProductReportsInput>
+}
+
+export type UserUpdateWithoutProductReportsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutProductReportsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUpsertWithoutReviewedProductReportsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewedProductReportsInput, Prisma.UserUncheckedUpdateWithoutReviewedProductReportsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewedProductReportsInput, Prisma.UserUncheckedCreateWithoutReviewedProductReportsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewedProductReportsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewedProductReportsInput, Prisma.UserUncheckedUpdateWithoutReviewedProductReportsInput>
+}
+
+export type UserUpdateWithoutReviewedProductReportsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewedProductReportsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+}
+
+export type UserCreateWithoutReviewsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -834,10 +1871,10 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -845,14 +1882,24 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   isVerified?: boolean
   isActive?: boolean
   role?: $Enums.Role
+  adminRoleId?: number | null
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -877,8 +1924,8 @@ export type UserUpdateWithoutReviewsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -888,12 +1935,22 @@ export type UserUpdateWithoutReviewsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -903,8 +1960,8 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -912,24 +1969,34 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -939,12 +2006,22 @@ export type UserCreateWithoutOrdersInput = {
   role?: $Enums.Role
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
   carts?: Prisma.CartCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -952,10 +2029,10 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -963,14 +2040,24 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   isVerified?: boolean
   isActive?: boolean
   role?: $Enums.Role
+  adminRoleId?: number | null
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
   carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -995,8 +2082,8 @@ export type UserUpdateWithoutOrdersInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1006,12 +2093,22 @@ export type UserUpdateWithoutOrdersInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
   carts?: Prisma.CartUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -1021,8 +2118,8 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1030,24 +2127,34 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserCreateWithoutCartsInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -1057,12 +2164,22 @@ export type UserCreateWithoutCartsInput = {
   role?: $Enums.Role
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
   orders?: Prisma.OrderCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
 }
 
 export type UserUncheckedCreateWithoutCartsInput = {
@@ -1070,10 +2187,10 @@ export type UserUncheckedCreateWithoutCartsInput = {
   name: string
   email: string
   password: string
-  sort_order: number
+  sort_order?: number
   phone?: string | null
-  dateOfBirth?: Date | string | null
-  gender?: string | null
+  dateOfBirth: Date | string
+  gender: string
   address?: string | null
   city?: string | null
   country?: string | null
@@ -1081,14 +2198,24 @@ export type UserUncheckedCreateWithoutCartsInput = {
   isVerified?: boolean
   isActive?: boolean
   role?: $Enums.Role
+  adminRoleId?: number | null
   resetPasswordToken?: string | null
   resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: string | null
   refreshTokenExpiry?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string | null
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
 }
 
 export type UserCreateOrConnectWithoutCartsInput = {
@@ -1113,8 +2240,8 @@ export type UserUpdateWithoutCartsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1124,12 +2251,22 @@ export type UserUpdateWithoutCartsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
   orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCartsInput = {
@@ -1139,8 +2276,130 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   password?: Prisma.StringFieldUpdateOperationsInput | string
   sort_order?: Prisma.IntFieldUpdateOperationsInput | number
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutNotificationsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutNotificationsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+}
+
+export type UserUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutNotificationsInput, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UserUpdateWithoutNotificationsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1150,12 +2409,341 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
   refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateWithoutShopInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutShopInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutShopInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutShopInput, Prisma.UserUncheckedCreateWithoutShopInput>
+}
+
+export type UserUpsertWithoutShopInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutShopInput, Prisma.UserUncheckedUpdateWithoutShopInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutShopInput, Prisma.UserUncheckedCreateWithoutShopInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutShopInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutShopInput, Prisma.UserUncheckedUpdateWithoutShopInput>
+}
+
+export type UserUpdateWithoutShopInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutShopInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserCreateManyAdminRoleInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+}
+
+export type UserUpdateWithoutAdminRoleInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAdminRoleInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateManyWithoutAdminRoleInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 
@@ -1167,12 +2755,22 @@ export type UserCountOutputType = {
   orders: number
   carts: number
   reviews: number
+  notifications: number
+  adminActivityLogs: number
+  productLikes: number
+  productReports: number
+  reviewedProductReports: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   orders?: boolean | UserCountOutputTypeCountOrdersArgs
   carts?: boolean | UserCountOutputTypeCountCartsArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
+  notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  adminActivityLogs?: boolean | UserCountOutputTypeCountAdminActivityLogsArgs
+  productLikes?: boolean | UserCountOutputTypeCountProductLikesArgs
+  productReports?: boolean | UserCountOutputTypeCountProductReportsArgs
+  reviewedProductReports?: boolean | UserCountOutputTypeCountReviewedProductReportsArgs
 }
 
 /**
@@ -1206,6 +2804,41 @@ export type UserCountOutputTypeCountReviewsArgs<ExtArgs extends runtime.Types.Ex
   where?: Prisma.ProductReviewWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAdminActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AdminActivityLogWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProductLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductLikeWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountProductReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductReportWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewedProductReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ProductReportWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1223,15 +2856,26 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   isVerified?: boolean
   isActive?: boolean
   role?: boolean
+  adminRoleId?: boolean
   resetPasswordToken?: boolean
   resetPasswordExpires?: boolean
+  adminPasswordSetupToken?: boolean
+  adminPasswordSetupExpires?: boolean
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: boolean
   refreshTokenExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   carts?: boolean | Prisma.User$cartsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  shop?: boolean | Prisma.User$shopArgs<ExtArgs>
+  adminActivityLogs?: boolean | Prisma.User$adminActivityLogsArgs<ExtArgs>
+  productLikes?: boolean | Prisma.User$productLikesArgs<ExtArgs>
+  productReports?: boolean | Prisma.User$productReportsArgs<ExtArgs>
+  reviewedProductReports?: boolean | Prisma.User$reviewedProductReportsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1251,12 +2895,17 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isVerified?: boolean
   isActive?: boolean
   role?: boolean
+  adminRoleId?: boolean
   resetPasswordToken?: boolean
   resetPasswordExpires?: boolean
+  adminPasswordSetupToken?: boolean
+  adminPasswordSetupExpires?: boolean
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: boolean
   refreshTokenExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1275,12 +2924,17 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   isVerified?: boolean
   isActive?: boolean
   role?: boolean
+  adminRoleId?: boolean
   resetPasswordToken?: boolean
   resetPasswordExpires?: boolean
+  adminPasswordSetupToken?: boolean
+  adminPasswordSetupExpires?: boolean
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: boolean
   refreshTokenExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -1299,30 +2953,52 @@ export type UserSelectScalar = {
   isVerified?: boolean
   isActive?: boolean
   role?: boolean
+  adminRoleId?: boolean
   resetPasswordToken?: boolean
   resetPasswordExpires?: boolean
+  adminPasswordSetupToken?: boolean
+  adminPasswordSetupExpires?: boolean
+  adminPasswordSetupCompleted?: boolean
   refreshToken?: boolean
   refreshTokenExpiry?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "sort_order" | "phone" | "dateOfBirth" | "gender" | "address" | "city" | "country" | "profileImage" | "isVerified" | "isActive" | "role" | "resetPasswordToken" | "resetPasswordExpires" | "refreshToken" | "refreshTokenExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "email" | "password" | "sort_order" | "phone" | "dateOfBirth" | "gender" | "address" | "city" | "country" | "profileImage" | "isVerified" | "isActive" | "role" | "adminRoleId" | "resetPasswordToken" | "resetPasswordExpires" | "adminPasswordSetupToken" | "adminPasswordSetupExpires" | "adminPasswordSetupCompleted" | "refreshToken" | "refreshTokenExpiry" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
   orders?: boolean | Prisma.User$ordersArgs<ExtArgs>
   carts?: boolean | Prisma.User$cartsArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
+  notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  shop?: boolean | Prisma.User$shopArgs<ExtArgs>
+  adminActivityLogs?: boolean | Prisma.User$adminActivityLogsArgs<ExtArgs>
+  productLikes?: boolean | Prisma.User$productLikesArgs<ExtArgs>
+  productReports?: boolean | Prisma.User$productReportsArgs<ExtArgs>
+  reviewedProductReports?: boolean | Prisma.User$reviewedProductReportsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
-export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
-export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
+export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
+}
+export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  adminRole?: boolean | Prisma.User$adminRoleArgs<ExtArgs>
+}
 
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    adminRole: Prisma.$AdminRolePayload<ExtArgs> | null
     orders: Prisma.$OrderPayload<ExtArgs>[]
     carts: Prisma.$CartPayload<ExtArgs>[]
     reviews: Prisma.$ProductReviewPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    shop: Prisma.$ShopPayload<ExtArgs> | null
+    adminActivityLogs: Prisma.$AdminActivityLogPayload<ExtArgs>[]
+    productLikes: Prisma.$ProductLikePayload<ExtArgs>[]
+    productReports: Prisma.$ProductReportPayload<ExtArgs>[]
+    reviewedProductReports: Prisma.$ProductReportPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -1331,8 +3007,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     password: string
     sort_order: number
     phone: string | null
-    dateOfBirth: Date | null
-    gender: string | null
+    dateOfBirth: Date
+    gender: string
     address: string | null
     city: string | null
     country: string | null
@@ -1340,8 +3016,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     isVerified: boolean
     isActive: boolean
     role: $Enums.Role
+    adminRoleId: number | null
     resetPasswordToken: string | null
     resetPasswordExpires: Date | null
+    adminPasswordSetupToken: string | null
+    adminPasswordSetupExpires: Date | null
+    adminPasswordSetupCompleted: boolean
     refreshToken: string | null
     refreshTokenExpiry: Date | null
     createdAt: Date
@@ -1740,9 +3420,16 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  adminRole<T extends Prisma.User$adminRoleArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminRoleArgs<ExtArgs>>): Prisma.Prisma__AdminRoleClient<runtime.Types.Result.GetResult<Prisma.$AdminRolePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   orders<T extends Prisma.User$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   carts<T extends Prisma.User$cartsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$cartsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CartPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  shop<T extends Prisma.User$shopArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$shopArgs<ExtArgs>>): Prisma.Prisma__ShopClient<runtime.Types.Result.GetResult<Prisma.$ShopPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  adminActivityLogs<T extends Prisma.User$adminActivityLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$adminActivityLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AdminActivityLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  productLikes<T extends Prisma.User$productLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  productReports<T extends Prisma.User$productReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewedProductReports<T extends Prisma.User$reviewedProductReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedProductReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1787,8 +3474,12 @@ export interface UserFieldRefs {
   readonly isVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly isActive: Prisma.FieldRef<"User", 'Boolean'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
+  readonly adminRoleId: Prisma.FieldRef<"User", 'Int'>
   readonly resetPasswordToken: Prisma.FieldRef<"User", 'String'>
   readonly resetPasswordExpires: Prisma.FieldRef<"User", 'DateTime'>
+  readonly adminPasswordSetupToken: Prisma.FieldRef<"User", 'String'>
+  readonly adminPasswordSetupExpires: Prisma.FieldRef<"User", 'DateTime'>
+  readonly adminPasswordSetupCompleted: Prisma.FieldRef<"User", 'Boolean'>
   readonly refreshToken: Prisma.FieldRef<"User", 'String'>
   readonly refreshTokenExpiry: Prisma.FieldRef<"User", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
@@ -2047,6 +3738,10 @@ export type UserCreateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    */
   data: Prisma.UserCreateManyInput | Prisma.UserCreateManyInput[]
   skipDuplicates?: boolean
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeCreateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2117,6 +3812,10 @@ export type UserUpdateManyAndReturnArgs<ExtArgs extends runtime.Types.Extensions
    * Limit how many Users to update.
    */
   limit?: number
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserIncludeUpdateManyAndReturn<ExtArgs> | null
 }
 
 /**
@@ -2183,6 +3882,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.adminRole
+ */
+export type User$adminRoleArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminRole
+   */
+  select?: Prisma.AdminRoleSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminRole
+   */
+  omit?: Prisma.AdminRoleOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminRoleInclude<ExtArgs> | null
+  where?: Prisma.AdminRoleWhereInput
 }
 
 /**
@@ -2255,6 +3973,145 @@ export type User$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
   take?: number
   skip?: number
   distinct?: Prisma.ProductReviewScalarFieldEnum | Prisma.ProductReviewScalarFieldEnum[]
+}
+
+/**
+ * User.notifications
+ */
+export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.shop
+ */
+export type User$shopArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Shop
+   */
+  select?: Prisma.ShopSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Shop
+   */
+  omit?: Prisma.ShopOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ShopInclude<ExtArgs> | null
+  where?: Prisma.ShopWhereInput
+}
+
+/**
+ * User.adminActivityLogs
+ */
+export type User$adminActivityLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AdminActivityLog
+   */
+  select?: Prisma.AdminActivityLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AdminActivityLog
+   */
+  omit?: Prisma.AdminActivityLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AdminActivityLogInclude<ExtArgs> | null
+  where?: Prisma.AdminActivityLogWhereInput
+  orderBy?: Prisma.AdminActivityLogOrderByWithRelationInput | Prisma.AdminActivityLogOrderByWithRelationInput[]
+  cursor?: Prisma.AdminActivityLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AdminActivityLogScalarFieldEnum | Prisma.AdminActivityLogScalarFieldEnum[]
+}
+
+/**
+ * User.productLikes
+ */
+export type User$productLikesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductLike
+   */
+  select?: Prisma.ProductLikeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductLike
+   */
+  omit?: Prisma.ProductLikeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductLikeInclude<ExtArgs> | null
+  where?: Prisma.ProductLikeWhereInput
+  orderBy?: Prisma.ProductLikeOrderByWithRelationInput | Prisma.ProductLikeOrderByWithRelationInput[]
+  cursor?: Prisma.ProductLikeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductLikeScalarFieldEnum | Prisma.ProductLikeScalarFieldEnum[]
+}
+
+/**
+ * User.productReports
+ */
+export type User$productReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductReport
+   */
+  select?: Prisma.ProductReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductReport
+   */
+  omit?: Prisma.ProductReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductReportInclude<ExtArgs> | null
+  where?: Prisma.ProductReportWhereInput
+  orderBy?: Prisma.ProductReportOrderByWithRelationInput | Prisma.ProductReportOrderByWithRelationInput[]
+  cursor?: Prisma.ProductReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductReportScalarFieldEnum | Prisma.ProductReportScalarFieldEnum[]
+}
+
+/**
+ * User.reviewedProductReports
+ */
+export type User$reviewedProductReportsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ProductReport
+   */
+  select?: Prisma.ProductReportSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ProductReport
+   */
+  omit?: Prisma.ProductReportOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ProductReportInclude<ExtArgs> | null
+  where?: Prisma.ProductReportWhereInput
+  orderBy?: Prisma.ProductReportOrderByWithRelationInput | Prisma.ProductReportOrderByWithRelationInput[]
+  cursor?: Prisma.ProductReportWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ProductReportScalarFieldEnum | Prisma.ProductReportScalarFieldEnum[]
 }
 
 /**

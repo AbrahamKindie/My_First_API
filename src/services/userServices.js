@@ -1,15 +1,24 @@
 
 import prisma from "../db/prisma.js";
 
-export const fetchAllUsers = async (req, res) => {
-    
-    try{
+// ==========================================
+// FETCH ALL MARKETPLACE USERS
+// ==========================================
 
-        const totalUsers = await prisma.user.count();
+export const fetchAllUsers = async () => {
+    try {
+        const where = {
+            role: {
+                in: ["USER", "SHOP_OWNER"],
+            },
+        };
+
+        const totalUsers = await prisma.user.count({ where });
 
         const users = await prisma.user.findMany({
+            where,
             orderBy: {
-                sort_order: "asc"
+                sort_order: "asc",
             },
             select: {
                 id: true,
@@ -27,411 +36,859 @@ export const fetchAllUsers = async (req, res) => {
                 isActive: true,
                 role: true,
                 createdAt: true,
-                updatedAt: true
-            }
+                updatedAt: true,
+            },
         });
 
         return { users, totalUsers };
-
-    }catch (error) {
+    } catch (error) {
         console.error("Error fetching users:", error);
-        throw new Error("Internal server error");
+        throw error;
     }
+};
 
-}
+// ==========================================
+// SAFE USER PROFILE FIELDS
+// DYNAMIC ADMIN ROLE AND PERMISSIONS
+// ==========================================
 
+const profileSelect = {
+    id: true,
+    name: true,
+    email: true,
+    phone: true,
+    dateOfBirth: true,
+    gender: true,
+    address: true,
+    city: true,
+    country: true,
+    profileImage: true,
+    isVerified: true,
+    isActive: true,
+    role: true,
 
-export const profile = async (req, res) => {
-    try {
-        const user = await prisma.user.findUnique({
-            where: {
-                id: req.user.userId
+    adminRoleId: true,
+
+    adminRole: {
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            isActive: true,
+            permissions: {
+                select: {
+                    permission: true,
+                },
             },
-            select: {
-                id: true,
-                name: true,
-                email: true,
-                sort_order: true,
-                phone: true,
-                dateOfBirth: true,
-                gender: true,
-                address: true,
-                city: true,
-                country: true,
-                profileImage: true,
-                isVerified: true,
-                isActive: true,
-                role: true,
-                createdAt: true,
-                updatedAt: true
-            }
-        });
-      
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
+        },
+    },
 
+    // Shop information
+    shop: {
+        select: {
+            id: true,
+            name: true,
+            description: true,
+            shopCategoryId: true,
+
+            shopCategory: {
+                select: {
+                    id: true,
+                    name: true,
+                    description: true,
+                },
+            },
+
+            logo: true,
+            coverImage: true,
+            address: true,
+            city: true,
+            region: true,
+            phone: true,
+            email: true,
+            status: true,
+            createdAt: true,
+            updatedAt: true,
+        },
+    },
+
+    createdAt: true,
+    updatedAt: true,
+};
+
+// ==========================================
+// ATTACH EFFECTIVE ADMIN PERMISSIONS
+// ==========================================
+
+const attachEffectiveAdminPermissions = (user) => {
+    if (!user) return user;
+
+    // Super Admin bypasses all Admin permissions.
+    if (user.role === "SUPER_ADMIN") {
         return {
-            success: true,
-            message: "User profile fetched successfully",
-            user
+            ...user,
+            adminRoleId: null,
+            adminRole: null,
+            adminPermissions: ["*"],
         };
-    } catch (error) {
-        console.error("Error fetching user profile:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error"
-        });
     }
-}
 
-
-export const updateUserProfile = async (req, res) => {
-    const { name, phone, dateOfBirth, gender, address, city, country, profileImage } = req.body;
-
-    try {
-
-        const updatedUser = await prisma.user.update({
-            where: {
-                id: req.user.userId
-            },
-            data: {
-                name,
-                phone,
-                dateOfBirth: dateOfBirth
-                    ? new Date(dateOfBirth)
-                    : dateOfBirth,
-                gender,
-                address,
-                city,
-                country,
-                profileImage
-            }
-        });
-
-        return res.status(200).json(
-            {
-                 success: true,
-                 message: "User profile updated successfully",
-                 user: {    
-                    id: updatedUser.id,
-                    name: updatedUser.name,
-                    email: updatedUser.email,
-                    sort_order: updatedUser.sort_order,
-                    phone: updatedUser.phone,
-                    dateOfBirth: updatedUser.dateOfBirth,
-                    gender: updatedUser.gender,
-                    address: updatedUser.address,
-                    city: updatedUser.city,
-                    country: updatedUser.country,
-                    profileImage: updatedUser.profileImage,
-                    isVerified: updatedUser.isVerified,
-                    isActive: updatedUser.isActive,
-                    role: updatedUser.role,
-                    createdAt: updatedUser.createdAt,
-                    updatedAt: updatedUser.updatedAt
-                }
-        
-            });
-
-    } catch (error) {
-        console.error("Error updating user profile:", error);
-        return res.status(500).json({
-            success: false,
-            message: "Internal server error"
-        });
+    // Marketplace users do not have Admin permissions.
+    if (user.role !== "ADMIN") {
+        return {
+            ...user,
+            adminRoleId: null,
+            adminRole: null,
+            adminPermissions: [],
+        };
     }
-}
 
-export const getOneUser = async (req, res) => {
+    // An Admin without an active assigned role
+    // receives no Admin permissions.
+    const adminPermissions =
+        user.adminRole?.isActive
+            ? user.adminRole.permissions
+                .map((item) => item.permission)
+                .filter(
+                    (permission) =>
+                        permission !== "MANAGE_ADMIN_PERMISSIONS"
+                )
+            : [];
 
-    try{
-    const userId = Number(req.params.id);
+    return {
+        ...user,
+        adminPermissions,
+    };
+};
 
-    if (Number.isNaN(userId)) {
-        return res.status(400).json({
-            message: "Invalid user ID"
-        });
+// ==========================================
+// PROFILE ERROR HELPER
+// ==========================================
+
+const createProfileError = (message, statusCode = 400) => {
+    const error = new Error(message);
+    error.statusCode = statusCode;
+    return error;
+};
+
+// ==========================================
+// VALIDATE MARKETPLACE USER TARGET
+// ==========================================
+
+const getMarketplaceUser = async (userId) => {
+    const id = Number(userId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw createProfileError("Invalid user ID.", 400);
+    }
+
+    const user = await prisma.user.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+            isActive: true,
+        },
+    });
+
+    if (!user) {
+        throw createProfileError("User not found.", 404);
+    }
+
+    if (!["USER", "SHOP_OWNER"].includes(user.role)) {
+        throw createProfileError(
+            "This endpoint only manages marketplace users.",
+            403
+        );
+    }
+
+    return user;
+};
+
+// ==========================================
+// GET LOGGED-IN USER PROFILE
+// ALL AUTHENTICATED ROLES
+// ==========================================
+
+export const profile = async (userId) => {
+    const id = Number(userId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw createProfileError("Invalid user ID.", 400);
     }
 
     const user = await prisma.user.findUnique({
         where: {
-            id: userId
-        }
+            id,
+        },
+        select: profileSelect,
     });
 
     if (!user) {
-        return res.status(404).json({
-            message: "User not found"
-        });
+        throw createProfileError("User profile not found.", 404);
     }
 
-    res.status(200).json(
-        { 
-            
-        user :{
-           id: user.id,
-           name: user.name,
-           email: user.email,
-           sort_order: user.sort_order,
-            phone: user.phone,
-                dateOfBirth: user.dateOfBirth,
-                gender: user.gender,
-                address: user.address,
-                city: user.city,
-                country: user.country,
-                profileImage: user.profileImage,
-                isVerified: user.isVerified,
-                isActive: user.isActive,
-                role: user.role,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt
-        }
-      
+    return {
+        success: true,
+        message: "Profile fetched successfully.",
+        user: attachEffectiveAdminPermissions(user),
+    };
+};
+
+// ==========================================
+// UPDATE LOGGED-IN USER PROFILE
+//
+// USER / SHOP_OWNER:
+// Can update name, phone, gender, date of birth,
+// address, city, country and profile image.
+//
+// ADMIN / SUPER_ADMIN:
+// Can update name, gender, date of birth,
+// address, city, country and profile image.
+//
+// ADMIN / SUPER_ADMIN CANNOT UPDATE:
+// Email or phone.
+// ==========================================
+
+export const updateUserProfile = async (userId, role, data) => {
+    const allowedRoles = [
+        "USER",
+        "SHOP_OWNER",
+        "ADMIN",
+        "SUPER_ADMIN",
+    ];
+
+    if (!allowedRoles.includes(role)) {
+        throw createProfileError("Invalid user role.", 403);
+    }
+
+    const id = Number(userId);
+
+    if (!Number.isSafeInteger(id) || id <= 0) {
+        throw createProfileError("Invalid user ID.", 400);
+    }
+
+    if (
+        !data ||
+        typeof data !== "object" ||
+        Array.isArray(data)
+    ) {
+        throw createProfileError("Invalid profile data.", 400);
+    }
+
+    // ==========================================
+    // FETCH CURRENT ACCOUNT
+    // ==========================================
+
+    const existingUser = await prisma.user.findUnique({
+        where: { id },
+        select: {
+            id: true,
+            role: true,
+            phone: true,
+            isActive: true,
+        },
     });
 
-    }catch (error) {
-        console.error("Error fetching user by ID:", error);
-        res.status(500).json({ message: "Internal server error" });
+    if (!existingUser) {
+        throw createProfileError("User not found.", 404);
     }
-}
 
+    // Always verify the authenticated role against the database.
+    if (existingUser.role !== role) {
+        throw createProfileError(
+            "Your account role has changed. Please log in again.",
+            403
+        );
+    }
+
+    if (!existingUser.isActive) {
+        throw createProfileError(
+            "Your account is inactive.",
+            403
+        );
+    }
+
+    const isCustomerRole = [
+        "USER",
+        "SHOP_OWNER",
+    ].includes(existingUser.role);
+
+    const isAdminRole = [
+        "ADMIN",
+        "SUPER_ADMIN",
+    ].includes(existingUser.role);
+
+    // ==========================================
+    // ALLOWED PROFILE FIELDS
+    // ==========================================
+
+    const customerEditableFields = [
+        "name",
+        "phone",
+        "gender",
+        "dateOfBirth",
+        "address",
+        "city",
+        "country",
+        "profileImage",
+    ];
+
+    const adminEditableFields = [
+        "name",
+        "gender",
+        "dateOfBirth",
+        "address",
+        "city",
+        "country",
+        "profileImage",
+    ];
+
+    const allowedFields = isAdminRole
+        ? adminEditableFields
+        : customerEditableFields;
+
+    // Reject unsupported or restricted fields.
+    const submittedFields = Object.keys(data);
+
+    const invalidFields = submittedFields.filter(
+        (field) => !allowedFields.includes(field)
+    );
+
+    if (invalidFields.length > 0) {
+        if (
+            isAdminRole &&
+            invalidFields.some((field) =>
+                ["email", "phone", "adminRoleId", "permissions"].includes(field)
+            )
+        ) {
+            throw createProfileError(
+                "You cannot change your email, phone number, Admin Role, or permissions through My Account.",
+                403
+            );
+        }
+
+        throw createProfileError(
+            `You cannot update these profile fields: ${invalidFields.join(", ")}.`,
+            403
+        );
+    }
+
+    const updateData = {};
+
+    // ==========================================
+    // COPY ALLOWED FIELDS
+    // ==========================================
+
+    for (const field of allowedFields) {
+        if (data[field] !== undefined) {
+            updateData[field] = data[field];
+        }
+    }
+
+    // ==========================================
+    // VALIDATE NAME
+    // ==========================================
+
+    if (updateData.name !== undefined) {
+        if (
+            typeof updateData.name !== "string" ||
+            updateData.name.trim().length < 2 ||
+            updateData.name.trim().length > 100
+        ) {
+            throw createProfileError(
+                "Name must contain between 2 and 100 characters.",
+                400
+            );
+        }
+
+        updateData.name = updateData.name.trim();
+    }
+
+    // ==========================================
+    // VALIDATE PHONE
+    // USER / SHOP_OWNER ONLY
+    // ==========================================
+
+    if (
+        isCustomerRole &&
+        updateData.phone !== undefined
+    ) {
+        if (
+            updateData.phone !== null &&
+            typeof updateData.phone !== "string"
+        ) {
+            throw createProfileError(
+                "Invalid phone number.",
+                400
+            );
+        }
+
+        updateData.phone =
+            updateData.phone?.trim() || null;
+
+        if (
+            updateData.phone &&
+            updateData.phone !== existingUser.phone
+        ) {
+            const phoneExists = await prisma.user.findFirst({
+                where: {
+                    phone: updateData.phone,
+                    NOT: { id },
+                },
+                select: { id: true },
+            });
+
+            if (phoneExists) {
+                throw createProfileError(
+                    "This phone number is already registered.",
+                    409
+                );
+            }
+        }
+    }
+
+    // ==========================================
+    // VALIDATE GENDER
+    // ==========================================
+
+    if (
+        updateData.gender !== undefined &&
+        updateData.gender !== null &&
+        !["MALE", "FEMALE", "OTHER"].includes(updateData.gender)
+    ) {
+        throw createProfileError(
+            "Invalid gender.",
+            400
+        );
+    }
+
+    // ==========================================
+    // VALIDATE DATE OF BIRTH
+    // ADMIN MUST BE AT LEAST 18
+    // ==========================================
+
+    if (updateData.dateOfBirth !== undefined) {
+        if (
+            updateData.dateOfBirth === null ||
+            updateData.dateOfBirth === ""
+        ) {
+            updateData.dateOfBirth = null;
+        } else {
+            if (
+                typeof updateData.dateOfBirth !== "string" ||
+                !/^\d{4}-\d{2}-\d{2}$/.test(
+                    updateData.dateOfBirth
+                )
+            ) {
+                throw createProfileError(
+                    "Date of birth must use YYYY-MM-DD format.",
+                    400
+                );
+            }
+
+            const [year, month, day] =
+                updateData.dateOfBirth.split("-").map(Number);
+
+            const dateOfBirth = new Date(
+                Date.UTC(year, month - 1, day)
+            );
+
+            // Reject invalid calendar dates.
+            if (
+                dateOfBirth.getUTCFullYear() !== year ||
+                dateOfBirth.getUTCMonth() !== month - 1 ||
+                dateOfBirth.getUTCDate() !== day
+            ) {
+                throw createProfileError(
+                    "Invalid date of birth.",
+                    400
+                );
+            }
+
+            const today = new Date();
+
+            let age =
+                today.getFullYear() - year;
+
+            if (
+                today.getMonth() + 1 < month ||
+                (
+                    today.getMonth() + 1 === month &&
+                    today.getDate() < day
+                )
+            ) {
+                age--;
+            }
+
+            if (dateOfBirth >= new Date(
+                Date.UTC(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    today.getDate()
+                )
+            )) {
+                throw createProfileError(
+                    "Date of birth must be in the past.",
+                    400
+                );
+            }
+
+            if (isAdminRole && age < 18) {
+                throw createProfileError(
+                    "Admin must be at least 18 years old.",
+                    400
+                );
+            }
+
+            updateData.dateOfBirth = dateOfBirth;
+        }
+    }
+
+    // ==========================================
+    // VALIDATE ADDRESS, CITY AND COUNTRY
+    // ==========================================
+
+    const textFields = [
+        "address",
+        "city",
+        "country",
+    ];
+
+    for (const field of textFields) {
+        if (updateData[field] !== undefined) {
+            if (
+                updateData[field] !== null &&
+                typeof updateData[field] !== "string"
+            ) {
+                throw createProfileError(
+                    `Invalid ${field}.`,
+                    400
+                );
+            }
+
+            updateData[field] =
+                updateData[field]?.trim() || null;
+        }
+    }
+
+    // ==========================================
+    // VALIDATE PROFILE IMAGE
+    // ==========================================
+
+    if (updateData.profileImage !== undefined) {
+        if (
+            updateData.profileImage !== null &&
+            typeof updateData.profileImage !== "string"
+        ) {
+            throw createProfileError(
+                "Invalid profile image.",
+                400
+            );
+        }
+
+        updateData.profileImage =
+            updateData.profileImage?.trim() || null;
+    }
+
+    // ==========================================
+    // CHECK UPDATE DATA
+    // ==========================================
+
+    if (Object.keys(updateData).length === 0) {
+        throw createProfileError(
+            "At least one profile field must be provided.",
+            400
+        );
+    }
+
+    // ==========================================
+    // UPDATE PROFILE
+    // ==========================================
+
+    try {
+        const updatedUser = await prisma.user.update({
+            where: { id },
+            data: updateData,
+            select: profileSelect,
+        });
+
+        return {
+            success: true,
+            message: "Profile updated successfully.",
+            user: attachEffectiveAdminPermissions(updatedUser),
+        };
+    } catch (error) {
+        if (error.code === "P2002") {
+            throw createProfileError(
+                "The supplied information is already in use.",
+                409
+            );
+        }
+
+        throw error;
+    }
+};
+
+
+// ==========================================
+// GET MARKETPLACE USER BY ID
+// ==========================================
+
+export const getOneUser = async (req, res) => {
+    try {
+        const user = await getMarketplaceUser(req.params.id);
+
+        const userDetails = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                sort_order: true,
+                phone: true,
+                dateOfBirth: true,
+                gender: true,
+                address: true,
+                city: true,
+                country: true,
+                profileImage: true,
+                isVerified: true,
+                isActive: true,
+                role: true,
+                createdAt: true,
+                updatedAt: true,
+            },
+        });
+
+        return res.status(200).json({
+            success: true,
+            user: userDetails,
+        });
+    } catch (error) {
+        console.error("Error fetching marketplace user:", error);
+
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error.",
+        });
+    }
+};
+
+// ==========================================
+// UPDATE MARKETPLACE USER
+// ==========================================
 
 export const userUpdate = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
-        const { email, role } = req.body;
+        const user = await getMarketplaceUser(req.params.id);
+        const { email } = req.body;
 
-        if (Number.isNaN(userId)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
+        if (email && email.trim().toLowerCase() !== user.email) {
+            const existingUser = await prisma.user.findUnique({
+                where: {
+                    email: email.trim().toLowerCase(),
+                },
+                select: { id: true },
             });
-        }
 
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
+            if (existingUser) {
+                return res.status(409).json({
+                    success: false,
+                    message: "Email is already in use by another user.",
+                });
             }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-
-        if (email && email.trim() !== user.email) {
-             const existingUser = await prisma.user.findUnique({
-                    where: {
-                        email: email.trim()
-                    }
-        })
-          if (existingUser) {
-            return res.status(400).json({
-                message: "Email is already in use by another user"
-            });
-
-        }
-
-        }
-
-        if( role && !["USER", "ADMIN"].includes(role)){
-            return res.status(400).json({
-                message: "Invalid role. Role must be either 'USER' or 'ADMIN'"
-            });
-        }
-           
-        const updateData = {};
-         
-        if (email) {
-            updateData.email = email.trim();
-        }
-
-        if (role) {
-            updateData.role = role;
         }
 
         const updatedUser = await prisma.user.update({
-            where: {
-                id: userId
+            where: { id: user.id },
+            data: {
+                ...(email && {
+                    email: email.trim().toLowerCase(),
+                    isVerified: false,
+                }),
             },
-            data: updateData
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                isVerified: true,
+                isActive: true,
+                updatedAt: true,
+            },
         });
 
-        res.status(200).json({
-            message: "User updated successfully",
-
-            user: {
-                id: updatedUser.id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                sort_order: updatedUser.sort_order,
-                phone: updatedUser.phone,
-                dateOfBirth: updatedUser.dateOfBirth,
-                gender: updatedUser.gender,
-                address: updatedUser.address,
-                city: updatedUser.city,
-                country: updatedUser.country,
-                profileImage: updatedUser.profileImage,
-                isVerified: updatedUser.isVerified,
-                isActive: updatedUser.isActive,
-                role: updatedUser.role,
-                createdAt: updatedUser.createdAt,
-                updatedAt: updatedUser.updatedAt
-            }
+        return res.status(200).json({
+            success: true,
+            message: "Marketplace user updated successfully.",
+            user: updatedUser,
         });
-
     } catch (error) {
-        console.error("Error updating user:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
+        console.error("Error updating marketplace user:", error);
 
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.code === "P2002"
+                ? "Email is already in use."
+                : error.message || "Internal server error.",
+        });
+    }
 };
+
+// ==========================================
+// ACTIVATE MARKETPLACE USER
+// ==========================================
 
 export const userActivate = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
+        const user = await getMarketplaceUser(req.params.id);
 
-        if (Number.isNaN(userId)) {
+        if (user.isActive) {
             return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
+                success: false,
+                message: "User is already active.",
             });
         }
 
         const updatedUser = await prisma.user.update({
-            where: {
-                id: userId
+            where: { id: user.id },
+            data: { isActive: true },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                isActive: true,
             },
-            data: {
-                isActive: true
-            }
         });
 
-        res.status(200).json({
-            message: "User activated successfully",
-            user: {
-                id: updatedUser.id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                isActive: updatedUser.isActive,
-                role: updatedUser.role,
-            }
+        return res.status(200).json({
+            success: true,
+            message: "User activated successfully.",
+            user: updatedUser,
         });
-
     } catch (error) {
         console.error("Error activating user:", error);
-        res.status(500).json({ message: "Internal server error" });
+
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error.",
+        });
     }
 };
 
+// ==========================================
+// DEACTIVATE MARKETPLACE USER
+// ==========================================
 
 export const userDeactivate = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
+        const user = await getMarketplaceUser(req.params.id);
 
-        if (Number.isNaN(userId)) {
+        if (!user.isActive) {
             return res.status(400).json({
-                message: "Invalid user ID"
+                success: false,
+                message: "User is already deactivated.",
             });
-        }
-
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
-
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
-            });
-        }
-
-        if (!user.isActive){
-            return res.status(400).json(
-                {
-                    message: "User is already deactivated"
-                }
-               )
         }
 
         const updatedUser = await prisma.user.update({
-            where: {
-                id: userId
-            },
+            where: { id: user.id },
             data: {
-                isActive: false
-            }
+                isActive: false,
+                refreshToken: null,
+            },
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                role: true,
+                isActive: true,
+            },
         });
 
-        res.status(200).json({
-            message: "User deactivated successfully",
-            user: {
-                id: updatedUser.id,
-                name: updatedUser.name,
-                email: updatedUser.email,
-                isActive: updatedUser.isActive,
-                role: updatedUser.role,
-            }
+        return res.status(200).json({
+            success: true,
+            message: "User deactivated successfully.",
+            user: updatedUser,
         });
-
     } catch (error) {
         console.error("Error deactivating user:", error);
-        res.status(500).json({ message: "Internal server error" });
-    }
 
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error.",
+        });
+    }
 };
 
+// ==========================================
+// DELETE MARKETPLACE USER
+// ==========================================
 
 export const userDelete = async (req, res) => {
     try {
-        const userId = Number(req.params.id);
+        const user = await getMarketplaceUser(req.params.id);
 
-        if (Number.isNaN(userId)) {
-            return res.status(400).json({
-                message: "Invalid user ID"
-            });
-        }
+        const [
+            orderCount,
+            reviewCount,
+            reportCount,
+            ownedShop,
+        ] = await Promise.all([
+            prisma.order.count({
+                where: { userId: user.id },
+            }),
 
-        const user = await prisma.user.findUnique({
-            where: {
-                id: userId
-            }
-        });
+            prisma.productReview.count({
+                where: { userId: user.id },
+            }),
 
-        if (!user) {
-            return res.status(404).json({
-                message: "User not found"
+            prisma.productReport.count({
+                where: { userId: user.id },
+            }),
+
+            prisma.shop.findUnique({
+                where: { ownerId: user.id },
+                select: { id: true },
+            }),
+        ]);
+
+        if (
+            orderCount > 0 ||
+            reviewCount > 0 ||
+            reportCount > 0 ||
+            ownedShop
+        ) {
+            return res.status(409).json({
+                success: false,
+                message: "This account cannot be deleted because it has associated marketplace records.",
+                dependencies: {
+                    orders: orderCount,
+                    reviews: reviewCount,
+                    submittedReports: reportCount,
+                    ownsShop: Boolean(ownedShop),
+                },
             });
         }
 
         await prisma.user.delete({
-            where: {
-                id: userId
-            }
+            where: { id: user.id },
         });
 
-        res.status(200).json({
-            message: "User deleted successfully"
+        return res.status(200).json({
+            success: true,
+            message: "Marketplace user deleted successfully.",
         });
+    } catch (error) {
+        console.error("Error deleting marketplace user:", error);
 
-    }catch (error) {
-        console.error("Error deleting user:", error);
-        res.status(500).json({ message: "Internal server error" });
+        return res.status(error.statusCode || 500).json({
+            success: false,
+            message: error.message || "Internal server error.",
+        });
     }
 };

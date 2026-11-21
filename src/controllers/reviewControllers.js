@@ -3,7 +3,6 @@ import {
   createReview,
   getProductReviews,
   updateReview,
-  deleteReview,
 } from "../services/reviewServices.js";
 
 // Create review
@@ -49,6 +48,8 @@ export const getProductReviewsController = async (req, res) => {
       pagination: result.pagination,
     });
   } catch (error) {
+    console.error("Get product reviews error:", error);
+
     return res.status(error.statusCode || 500).json({
       success: false,
       message: error.statusCode
@@ -73,28 +74,8 @@ export const updateReviewController = async (req, res) => {
       data: review,
     });
   } catch (error) {
-    return res.status(error.statusCode || 500).json({
-      success: false,
-      message: error.statusCode
-        ? error.message
-        : "Internal server error",
-    });
-  }
-};
+    console.error("Update review error:", error);
 
-// Delete own review
-export const deleteReviewController = async (req, res) => {
-  try {
-    const result = await deleteReview(
-      req.user.userId,
-      req.params.id
-    );
-
-    return res.status(200).json({
-      success: true,
-      message: result.message,
-    });
-  } catch (error) {
     return res.status(error.statusCode || 500).json({
       success: false,
       message: error.statusCode

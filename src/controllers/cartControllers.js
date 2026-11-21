@@ -32,9 +32,9 @@ export const addToCartController = async (req, res) => {
   const { productId, quantity } = req.body;
 
     const cart = await addToCart(
-      req.user.id,
-     productId,
-     quantity
+      req.user.userId,
+      productId,
+      quantity
     );
 
     return res.status(200).json({
@@ -53,7 +53,7 @@ export const addToCartController = async (req, res) => {
 export const updateCartItemController = async (req, res) => {
   try {
     const cart = await updateCartItem(
-      req.user.id,
+      req.user.userId,
       Number(req.params.id),
       Number(req.body.quantity)
     );
@@ -75,7 +75,7 @@ export const updateCartItemController = async (req, res) => {
 export const removeCartItemController = async (req, res) => {
   try {
     const cart = await removeCartItem(
-      req.user.id,
+      req.user.userId,
       Number(req.params.id)
     );
 
@@ -93,9 +93,10 @@ export const removeCartItemController = async (req, res) => {
 };
 
 // DELETE /api/cart/items
+// DELETE /carts/items
 export const clearCartController = async (req, res) => {
   try {
-    const cart = await clearCart(req.user.id);
+    const cart = await clearCart(req.user.userId);
 
     return res.status(200).json({
       success: true,

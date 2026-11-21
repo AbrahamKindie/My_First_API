@@ -23,7 +23,7 @@ router.post("/items", authenticate, validate(addToCartSchema), addToCartControll
 
 router.patch("/items/:id", authenticate, validate(updateCartItemSchema), updateCartItemController);
 
-router.delete("/items/:id", authenticate, validate(removeCartItemController), removeCartItemController);
+router.delete("/items/:id", authenticate, validate(removeCartItemSchema), removeCartItemController);
 
 router.delete("/items", authenticate, validate(clearCartSchema), clearCartController);
 

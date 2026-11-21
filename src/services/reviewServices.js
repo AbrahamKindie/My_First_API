@@ -7,51 +7,80 @@ const createError = (message, statusCode = 400) => {
   return error;
 };
 
-// 1. Create product review
-export const createReview = async (userId, productId, data) => {
-  const id = Number(productId);
-  const customerId = Number(userId);
+// Validate IDs
+const validateId = (value, fieldName) => {
+  const id = Number(value);
 
   if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid product ID", 400);
+    throw createError(`Invalid ${fieldName}`, 400);
   }
 
-  // Check product exists.
+  return id;
+};
+
+// Validate review data
+const validateReviewData = (data, partial = false) => {
+  const validatedData = {};
+
+  if (!partial || data.rating !== undefined) {
+    const rating = Number(data.rating);
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+      throw createError(
+        "Rating must be an integer between 1 and 5",
+        400
+      );
+    }
+
+    validatedData.rating = rating;
+  }
+
+  if (!partial || data.comment !== undefined) {
+    if (typeof data.comment !== "string" || !data.comment.trim()) {
+      throw createError("Review comment is required", 400);
+    }
+
+    if (data.comment.trim().length > 1000) {
+      throw createError(
+        "Review comment cannot exceed 1000 characters",
+        400
+      );
+    }
+
+    validatedData.comment = data.comment.trim();
+  }
+
+  if (Object.keys(validatedData).length === 0) {
+    throw createError("Provide a rating or comment to update", 400);
+  }
+
+  return validatedData;
+};
+
+// 1. Create product review
+// Any authenticated customer can review any existing product.
+export const createReview = async (userId, productId, data) => {
+  const id = validateId(productId, "product ID");
+  const customerId = validateId(userId, "user ID");
+
+  const reviewData = validateReviewData(data);
+
+  // Check whether the product exists
   const product = await prisma.product.findUnique({
     where: { id },
-    select: { id: true, name: true },
+    select: { id: true },
   });
 
   if (!product) {
     throw createError("Product not found", 404);
   }
 
-  // Verify that the customer has a delivered order containing this product.
-  const deliveredOrderItem = await prisma.orderItem.findFirst({
-    where: {
-      productId: id,
-      order: {
-        userId: customerId,
-        status: "DELIVERED",
-      },
-    },
-  });
-
-  if (!deliveredOrderItem) {
-    throw createError(
-      "You can review this product only after it has been delivered to you",
-      403
-    );
-  }
-
-  // Create review. The unique constraint prevents duplicate reviews.
   try {
     return await prisma.productReview.create({
       data: {
         productId: id,
         userId: customerId,
-        rating: data.rating,
-        comment: data.comment,
+        ...reviewData,
       },
       include: {
         user: {
@@ -63,8 +92,12 @@ export const createReview = async (userId, productId, data) => {
       },
     });
   } catch (error) {
+    // Prevent the same customer from reviewing the same product twice
     if (error.code === "P2002") {
-      throw createError("You have already reviewed this product", 409);
+      throw createError(
+        "You have already reviewed this product",
+        409
+      );
     }
 
     throw error;
@@ -77,11 +110,7 @@ export const getProductReviews = async (
   page = 1,
   limit = 10
 ) => {
-  const id = Number(productId);
-
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid product ID", 400);
-  }
+  const id = validateId(productId, "product ID");
 
   const product = await prisma.product.findUnique({
     where: { id },
@@ -98,39 +127,62 @@ export const getProductReviews = async (
 
   const where = { productId: id };
 
-  const [reviews, total, ratingSummary] = await prisma.$transaction([
-    prisma.productReview.findMany({
-      where,
-      skip,
-      take: pageSize,
-      orderBy: { createdAt: "desc" },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
+  const [reviews, total, ratingSummary, ratingGroups] =
+    await prisma.$transaction([
+      prisma.productReview.findMany({
+        where,
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
           },
         },
-      },
-    }),
+      }),
 
-    prisma.productReview.count({ where }),
+      prisma.productReview.count({ where }),
 
-    prisma.productReview.aggregate({
-      where,
-      _avg: { rating: true },
-      _count: { rating: true },
-    }),
-  ]);
+      prisma.productReview.aggregate({
+        where,
+        _avg: { rating: true },
+        _count: { rating: true },
+      }),
+
+      prisma.productReview.groupBy({
+        by: ["rating"],
+        where,
+        _count: { rating: true },
+      }),
+    ]);
+
+  // Initialize rating distribution
+  const ratingDistribution = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  };
+
+  ratingGroups.forEach((group) => {
+    ratingDistribution[group.rating] = group._count.rating;
+  });
 
   return {
     reviews,
+
     summary: {
       averageRating: Number(
         (ratingSummary._avg.rating || 0).toFixed(1)
       ),
       totalReviews: ratingSummary._count.rating,
+      ratingDistribution,
     },
+
     pagination: {
       total,
       page: currentPage,
@@ -142,12 +194,10 @@ export const getProductReviews = async (
 
 // 3. Update own review
 export const updateReview = async (userId, reviewId, data) => {
-  const id = Number(reviewId);
-  const customerId = Number(userId);
+  const id = validateId(reviewId, "review ID");
+  const customerId = validateId(userId, "user ID");
 
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid review ID", 400);
-  }
+  const reviewData = validateReviewData(data, true);
 
   const review = await prisma.productReview.findUnique({
     where: { id },
@@ -157,13 +207,17 @@ export const updateReview = async (userId, reviewId, data) => {
     throw createError("Review not found", 404);
   }
 
+  // Customers can only update their own reviews
   if (review.userId !== customerId) {
-    throw createError("You can only update your own review", 403);
+    throw createError(
+      "You can only update your own review",
+      403
+    );
   }
 
-  return await prisma.productReview.update({
+  return prisma.productReview.update({
     where: { id },
-    data,
+    data: reviewData,
     include: {
       user: {
         select: {
@@ -173,32 +227,4 @@ export const updateReview = async (userId, reviewId, data) => {
       },
     },
   });
-};
-
-// 4. Delete own review
-export const deleteReview = async (userId, reviewId) => {
-  const id = Number(reviewId);
-  const customerId = Number(userId);
-
-  if (!Number.isSafeInteger(id) || id <= 0) {
-    throw createError("Invalid review ID", 400);
-  }
-
-  const review = await prisma.productReview.findUnique({
-    where: { id },
-  });
-
-  if (!review) {
-    throw createError("Review not found", 404);
-  }
-
-  if (review.userId !== customerId) {
-    throw createError("You can only delete your own review", 403);
-  }
-
-  await prisma.productReview.delete({
-    where: { id },
-  });
-
-  return { message: "Review deleted successfully" };
 };

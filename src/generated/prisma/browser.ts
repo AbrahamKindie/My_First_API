@@ -18,20 +18,55 @@ export { Prisma }
 export * as $Enums from './enums.ts'
 export * from './enums.ts';
 /**
+ * Model AdminPermission
+ * 
+ */
+export type AdminPermission = Prisma.AdminPermissionModel
+/**
  * Model User
  * 
  */
 export type User = Prisma.UserModel
 /**
- * Model Category
+ * Model AdminRole
  * 
  */
-export type Category = Prisma.CategoryModel
+export type AdminRole = Prisma.AdminRoleModel
+/**
+ * Model AdminRolePermission
+ * 
+ */
+export type AdminRolePermission = Prisma.AdminRolePermissionModel
+/**
+ * Model AdminActivityLog
+ * 
+ */
+export type AdminActivityLog = Prisma.AdminActivityLogModel
+/**
+ * Model ShopCategory
+ * 
+ */
+export type ShopCategory = Prisma.ShopCategoryModel
+/**
+ * Model ProductCategory
+ * 
+ */
+export type ProductCategory = Prisma.ProductCategoryModel
 /**
  * Model Product
  * 
  */
 export type Product = Prisma.ProductModel
+/**
+ * Model ProductLike
+ * 
+ */
+export type ProductLike = Prisma.ProductLikeModel
+/**
+ * Model ProductReport
+ * 
+ */
+export type ProductReport = Prisma.ProductReportModel
 /**
  * Model ProductDiscount
  * 
@@ -62,3 +97,18 @@ export type Cart = Prisma.CartModel
  * 
  */
 export type CartItem = Prisma.CartItemModel
+/**
+ * Model Notification
+ * 
+ */
+export type Notification = Prisma.NotificationModel
+/**
+ * Model Shop
+ * 
+ */
+export type Shop = Prisma.ShopModel
+/**
+ * Model OrderEmailJob
+ * 
+ */
+export type OrderEmailJob = Prisma.OrderEmailJobModel
