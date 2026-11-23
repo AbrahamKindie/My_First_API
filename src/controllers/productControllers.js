@@ -48,7 +48,6 @@ const handleControllerError = (res, error, context) => {
 // ==========================================
 // PUBLIC PRODUCT DISCOVERY
 // ==========================================
-
 export const getAllProductsController = async (req, res) => {
   try {
     const {
@@ -63,7 +62,12 @@ export const getAllProductsController = async (req, res) => {
     const products = await getAllProducts(
       search,
       categoryId,
-      { page, limit, sortBy, featured }
+      {
+        page,
+        limit,
+        sortBy,
+        featured,
+      }
     );
 
     return res.status(200).json({
@@ -72,7 +76,11 @@ export const getAllProductsController = async (req, res) => {
       data: products,
     });
   } catch (error) {
-    return handleControllerError(res, error, "GET ALL PRODUCTS ERROR");
+    return handleControllerError(
+      res,
+      error,
+      "GET ALL PRODUCTS ERROR"
+    );
   }
 };
 

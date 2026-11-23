@@ -387,7 +387,7 @@ const calculateProductPricing = (product) => {
 // PRODUCT ENRICHMENT
 // ==========================================
 
-const enrichProducts = async (products) => {
+export const enrichProducts = async (products) => {
   if (!products.length) {
     return [];
   }
@@ -687,17 +687,54 @@ export const getAllProducts = async (
   const where = {
     status: "ACTIVE",
     shop: {
-      status: "ACTIVE",
+      is: {
+        status: "ACTIVE",
+      },
     },
   };
 
+  // Search by product name, description, shop name,
+  // or product category name.
   if (search && String(search).trim()) {
-    where.name = {
-      contains: String(search).trim(),
-      mode: "insensitive",
-    };
+    const searchTerm = String(search).trim();
+
+    where.OR = [
+      {
+        name: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      },
+      {
+        description: {
+          contains: searchTerm,
+          mode: "insensitive",
+        },
+      },
+      {
+        shop: {
+          is: {
+            name: {
+              contains: searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+      {
+        productCategory: {
+          is: {
+            name: {
+              contains: searchTerm,
+              mode: "insensitive",
+            },
+          },
+        },
+      },
+    ];
   }
 
+  // Keep the exact product category filter.
   if (
     categoryId !== undefined &&
     categoryId !== null &&
@@ -716,6 +753,7 @@ export const getAllProducts = async (
     }
   }
 
+  // Keep all existing sorting options.
   const sortOptions = {
     newest: { createdAt: "desc" },
     oldest: { createdAt: "asc" },
@@ -759,6 +797,7 @@ export const getAllProducts = async (
     },
   };
 };
+
 
 
 // ==========================================

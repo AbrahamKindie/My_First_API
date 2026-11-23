@@ -1,5 +1,6 @@
 
 import prisma from "../db/prisma.js";
+import { enrichProducts } from "./productService.js";
 
 import {
   createProductCategorySchema,
@@ -38,10 +39,7 @@ const validateId = (id, fieldName = "Category ID") => {
 const validateShopId = (shopId) => {
   const parsedShopId = Number(shopId);
 
-  if (
-    !Number.isSafeInteger(parsedShopId) ||
-    parsedShopId <= 0
-  ) {
+  if (!Number.isSafeInteger(parsedShopId) || parsedShopId <= 0) {
     throw createError("Invalid shop ID", 400);
   }
 
@@ -88,7 +86,7 @@ const ensureActiveShop = async (shopId) => {
 };
 
 // ============================================
-// COMMON CATEGORY SELECT
+// CATEGORY INCLUDE
 // ============================================
 
 const categoryCountInclude = {
@@ -120,7 +118,15 @@ export const createProductCategory = async (shopId, data) => {
         name: validatedData.name,
         description: validatedData.description ?? null,
       },
-      include: categoryCountInclude,
+      include: {
+        ...categoryCountInclude,
+        products: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
     });
   } catch (error) {
     if (error.code === "P2002") {
@@ -136,6 +142,7 @@ export const createProductCategory = async (shopId, data) => {
 
 // ============================================
 // 2. GET MY PRODUCT CATEGORIES
+// Includes assigned product names for the table
 // ============================================
 
 export const getMyProductCategories = async (shopId) => {
@@ -150,12 +157,24 @@ export const getMyProductCategories = async (shopId) => {
     orderBy: {
       createdAt: "desc",
     },
-    include: categoryCountInclude,
+    include: {
+      ...categoryCountInclude,
+      products: {
+        select: {
+          id: true,
+          name: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
   });
 };
 
 // ============================================
 // 3. GET PRODUCT CATEGORY BY ID
+// Includes complete product details and stock
 // ============================================
 
 export const getProductCategoryById = async (shopId, id) => {
@@ -181,6 +200,13 @@ export const getProductCategoryById = async (shopId, id) => {
         },
         include: {
           discount: true,
+          shop: {
+            select: {
+              id: true,
+              name: true,
+              status: true,
+            },
+          },
         },
       },
     },
@@ -190,7 +216,14 @@ export const getProductCategoryById = async (shopId, id) => {
     throw createError("Product category not found.", 404);
   }
 
-  return category;
+  // Reuse the same stock, pricing, and review calculations
+  // used by the rest of the ShopEase product system.
+  const enrichedProducts = await enrichProducts(category.products);
+
+  return {
+    ...category,
+    products: enrichedProducts,
+  };
 };
 
 // ============================================
@@ -234,7 +267,15 @@ export const updateProductCategory = async (shopId, id, data) => {
           id: categoryId,
           shopId: validShopId,
         },
-        include: categoryCountInclude,
+        include: {
+          ...categoryCountInclude,
+          products: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
       });
     });
   } catch (error) {

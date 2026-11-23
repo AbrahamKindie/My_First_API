@@ -7,10 +7,9 @@ import { randomUUID } from "node:crypto";
 const uploadDirectory = path.join(
   process.cwd(),
   "uploads",
-  "categories"
+  "products"
 );
 
-// Create upload directory automatically
 fs.mkdirSync(uploadDirectory, { recursive: true });
 
 const allowedMimeTypes = [
@@ -27,30 +26,31 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
     const extension = path.extname(file.originalname).toLowerCase();
-
     cb(null, `${randomUUID()}${extension}`);
   },
 });
 
 const fileFilter = (req, file, cb) => {
+  console.log("[MULTER RECEIVED FILE]", file.originalname);
+
   if (!allowedMimeTypes.includes(file.mimetype)) {
     return cb(
-      new Error(
-        "Only JPEG, PNG, WEBP, and GIF images are allowed"
-      )
+      new Error("Only JPEG, PNG, WEBP, and GIF images are allowed")
     );
   }
 
   cb(null, true);
 };
 
-const uploadShopCategoryImage = multer({
+const upload = multer({
   storage,
   fileFilter,
   limits: {
     fileSize: 5 * 1024 * 1024,
-    files: 1,
+    files: 10,
   },
 });
 
-export default uploadShopCategoryImage;
+console.log("[PRODUCT MULTER] Initialized: maximum 10 files");
+
+export default upload;

@@ -269,7 +269,12 @@ export async function seedAdminPermissions() {
         "All seeded permissions assigned to Default Admin."
       );
       console.log("----------------------------------");
-    }
+    },
+ {
+    maxWait: 10000,
+    timeout: 30000,
+  }
+
   );
 
   console.log("Admin permissions seeded successfully!");

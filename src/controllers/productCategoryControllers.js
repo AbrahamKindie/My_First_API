@@ -40,6 +40,7 @@ export const createProductCategoryController = async (req, res) => {
 
 // ============================================
 // GET MY PRODUCT CATEGORIES
+// Includes assigned product names
 // ============================================
 
 export const getMyProductCategoriesController = async (req, res) => {
@@ -60,12 +61,16 @@ export const getMyProductCategoriesController = async (req, res) => {
       message: error.statusCode
         ? error.message
         : "Internal server error",
+      ...(error.details && {
+        errors: error.details,
+      }),
     });
   }
 };
 
 // ============================================
 // GET PRODUCT CATEGORY BY ID
+// Includes assigned products and stock details
 // ============================================
 
 export const getProductCategoryByIdController = async (req, res) => {
@@ -87,6 +92,9 @@ export const getProductCategoryByIdController = async (req, res) => {
       message: error.statusCode
         ? error.message
         : "Internal server error",
+      ...(error.details && {
+        errors: error.details,
+      }),
     });
   }
 };
@@ -146,6 +154,9 @@ export const deleteProductCategoryController = async (req, res) => {
       message: error.statusCode
         ? error.message
         : "Internal server error",
+      ...(error.details && {
+        errors: error.details,
+      }),
     });
   }
 };

@@ -1,9 +1,14 @@
 
+import "dotenv/config";
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
+import multer from "multer";
 import path from "path";
 import { fileURLToPath } from "url";
+
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./swagger.js";
 
 // ==========================================
 // ROUTES
@@ -28,10 +33,8 @@ import adminRoleRoutes from "./routs/adminRoleRoutes.js";
 import { startOrderScheduler } from "./services/orderScheduler.js";
 
 // ==========================================
-// ENVIRONMENT CONFIGURATION
+// EXPRESS APPLICATION
 // ==========================================
-
-dotenv.config();
 
 const app = express();
 
@@ -58,6 +61,32 @@ app.use(
 );
 
 // ==========================================
+// SWAGGER / OPENAPI DOCUMENTATION
+// ==========================================
+
+// OpenAPI JSON specification.
+app.get("/openapi.json", (req, res) => {
+  res.status(200).json(swaggerSpec);
+});
+
+// Interactive Swagger UI.
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    explorer: true,
+    customSiteTitle: "ShopEase API Documentation",
+    swaggerOptions: {
+      persistAuthorization: true,
+      displayRequestDuration: true,
+      docExpansion: "list",
+      filter: true,
+      showCommonExtensions: true,
+    },
+  })
+);
+
+// ==========================================
 // STATIC FILES
 // ==========================================
 
@@ -69,6 +98,7 @@ app.use(
 // ==========================================
 // API ROUTES
 // ==========================================
+
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoryRoutes);
@@ -78,7 +108,11 @@ app.use("/reviews", reviewRoutes);
 app.use("/notifications", notificationRoutes);
 app.use("/shops", shopRoutes);
 app.use("/users", userRoutes);
+
+// Admin account and marketplace management.
 app.use("/admin", adminRoutes);
+
+// Admin roles and permission management.
 app.use("/admin", adminRoleRoutes);
 
 // ==========================================
@@ -108,17 +142,46 @@ app.use((req, res) => {
 // ==========================================
 
 app.use((err, req, res, next) => {
-  console.error("Global Error Handler:", err);
+  console.error("========== GLOBAL ERROR ==========");
+  console.error("Request:", req.method, req.originalUrl);
+  console.error("Error name:", err.name);
+  console.error("Error code:", err.code);
+  console.error("Error message:", err.message);
+  console.error("Full error:", err);
+  console.error("==================================");
 
+  // Delegate if response headers have already been sent.
   if (res.headersSent) {
     return next(err);
   }
 
-  return res.status(err.statusCode || 500).json({
+  // ==========================================
+  // MULTER ERRORS
+  // ==========================================
+
+  if (err instanceof multer.MulterError) {
+    return res.status(400).json({
+      success: false,
+      message: err.message,
+      code: err.code,
+      field: err.field || null,
+    });
+  }
+
+  // ==========================================
+  // OTHER APPLICATION ERRORS
+  // ==========================================
+
+  const statusCode = err.statusCode || err.status || 500;
+
+  return res.status(statusCode).json({
     success: false,
-    message: err.statusCode
-      ? err.message
-      : "Internal server error",
+    message:
+      process.env.NODE_ENV === "development"
+        ? err.message
+        : statusCode >= 500
+          ? "Internal server error"
+          : err.message,
   });
 });
 
@@ -127,18 +190,33 @@ app.use((err, req, res, next) => {
 // ==========================================
 
 const PORT = process.env.PORT || 3000;
+const PRODUCTION_API_URL= process.env.PRODUCTION_API_URL;
 
 const server = app.listen(PORT, () => {
-  console.log(`ShopEase API running on port ${PORT}`);
+  console.log("========================================");
+  console.log("          SHOEASE BACKEND API");
+  console.log("========================================");
+  console.log(`Server:       http://localhost:${PORT}`);
+  console.log(`Swagger UI:   http://localhost:${PORT}/api-docs`);
+  console.log(`OpenAPI JSON: http://localhost:${PORT}/openapi.json`);
+  console.log(`production JSON : ${PRODUCTION_API_URL}/openapi.json`);
+  console.log("========================================");
 
-  // Start persistent database polling for pending orders.
+  // ==========================================
+  // START ORDER SCHEDULER
+  // ==========================================
+
   try {
     startOrderScheduler();
-    console.log("ShopEase order scheduler started");
+    console.log("[ORDER SCHEDULER] Started successfully.");
   } catch (error) {
-    console.error("Failed to start order scheduler:", error);
+    console.error("[ORDER SCHEDULER] Failed to start:", error);
   }
 });
+
+// ==========================================
+// EXPORTS
+// ==========================================
 
 export { server };
 export default app;
