@@ -76,7 +76,7 @@ const errorResponses = {
     },
   },
   "403": {
-    description: "Access denied or insufficient permissions.",
+    description: "Access denied or need permissions.",
     content: {
       "application/json": {
         schema: ref("ErrorResponse"),
@@ -801,18 +801,22 @@ File upload endpoints use multipart/form-data. Uploaded files are served from th
     `,
   },
 
-  servers: [
-    {
-      url: `http://localhost:${port}`,
-      description: "Local development server",
-    },
-    ...(productionUrl
-      ? [{
+
+servers: [
+  ...(productionUrl
+    ? [
+        {
           url: productionUrl,
-          description: "Production server",
-        }]
-      : []),
-  ],
+          description: "ShopEase Production API",
+        },
+      ]
+    : []),
+  {
+    url: `http://localhost:${port}`,
+    description: "Local development server",
+  },
+],
+
 
   tags: [
     {

@@ -230,7 +230,7 @@ export const registerUser = async (data) => {
 
   if (!["USER", "SHOP_OWNER"].includes(role)) {
     throw createError(
-      "Invalid registration role. Admin registration is not allowed.",
+      "Invalid registration role. please enter USER or SHOP_OWNER as a role.",
       403
     );
   }
