@@ -5,11 +5,9 @@ import OpenAI from "openai";
 import prisma from "../db/prisma.js";
 import { createSupportTicket } from "./supportServices.js";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let openaiClient = null;
 
-const MODEL = process.env.OPENAI_MODEL || "gpt-5.5";
+const MODEL = process.env.OPENAI_MODEL || "gpt-6-luna";
 
 const GUEST_TOKEN_DAYS = Number(
   process.env.AI_SUPPORT_GUEST_TOKEN_DAYS || 30
@@ -38,23 +36,52 @@ export class AiSupportServiceError extends Error {
   }
 }
 
+/**
+ * Create the OpenAI client only when an AI request is made.
+ * This prevents Render from crashing at startup when the
+ * API key is missing.
+ */
+const getOpenAIClient = () => {
+  const apiKey = process.env.OPENAI_API_KEY?.trim();
+
+  if (!apiKey) {
+    throw new AiSupportServiceError(
+      "AI Support is not configured. Please contact the administrator.",
+      503
+    );
+  }
+
+  if (!openaiClient) {
+    openaiClient = new OpenAI({
+      apiKey,
+    });
+  }
+
+  return openaiClient;
+};
+
 const hashToken = (token) =>
   crypto.createHash("sha256").update(token).digest("hex");
 
-const createGuestToken = () => crypto.randomBytes(32).toString("hex");
+const createGuestToken = () =>
+  crypto.randomBytes(32).toString("hex");
 
 const safeCompare = (a, b) => {
   const first = Buffer.from(a);
   const second = Buffer.from(b);
 
-  if (first.length !== second.length) return false;
+  if (first.length !== second.length) {
+    return false;
+  }
 
   return crypto.timingSafeEqual(first, second);
 };
 
 const getGuestExpiry = () => {
   const expiry = new Date();
+
   expiry.setDate(expiry.getDate() + GUEST_TOKEN_DAYS);
+
   return expiry;
 };
 
@@ -126,21 +153,34 @@ const getConversationAccess = async ({
   user,
   guestToken,
 }) => {
-  if (!conversationId || typeof conversationId !== "string") {
-    throw new AiSupportServiceError("Invalid conversation ID.");
+  if (
+    !conversationId ||
+    typeof conversationId !== "string"
+  ) {
+    throw new AiSupportServiceError(
+      "Invalid conversation ID."
+    );
   }
 
-  const conversation = await prisma.aiSupportConversation.findUnique({
-    where: { id: conversationId },
-    include: {
-      messages: {
-        orderBy: { createdAt: "asc" },
+  const conversation =
+    await prisma.aiSupportConversation.findUnique({
+      where: {
+        id: conversationId,
       },
-    },
-  });
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
 
   if (!conversation) {
-    throw new AiSupportServiceError("Conversation not found.", 404);
+    throw new AiSupportServiceError(
+      "Conversation not found.",
+      404
+    );
   }
 
   if (user) {
@@ -164,7 +204,10 @@ const getConversationAccess = async ({
     );
   }
 
-  if (!guestToken || typeof guestToken !== "string") {
+  if (
+    !guestToken ||
+    typeof guestToken !== "string"
+  ) {
     throw new AiSupportServiceError(
       "Guest conversation access token is required.",
       401
@@ -197,8 +240,11 @@ const getConversationAccess = async ({
   return conversation;
 };
 
-export const createAiSupportConversation = async (user = null) => {
-  if (!process.env.OPENAI_API_KEY) {
+export const createAiSupportConversation = async (
+  user = null
+) => {
+  // Check configuration without initializing the OpenAI client.
+  if (!process.env.OPENAI_API_KEY?.trim()) {
     throw new AiSupportServiceError(
       "AI Support is not configured yet.",
       503
@@ -206,11 +252,12 @@ export const createAiSupportConversation = async (user = null) => {
   }
 
   if (user) {
-    const conversation = await prisma.aiSupportConversation.create({
-      data: {
-        userId: user.userId,
-      },
-    });
+    const conversation =
+      await prisma.aiSupportConversation.create({
+        data: {
+          userId: user.userId,
+        },
+      });
 
     return {
       conversation,
@@ -220,12 +267,13 @@ export const createAiSupportConversation = async (user = null) => {
 
   const guestToken = createGuestToken();
 
-  const conversation = await prisma.aiSupportConversation.create({
-    data: {
-      guestTokenHash: hashToken(guestToken),
-      guestTokenExpiresAt: getGuestExpiry(),
-    },
-  });
+  const conversation =
+    await prisma.aiSupportConversation.create({
+      data: {
+        guestTokenHash: hashToken(guestToken),
+        guestTokenExpiresAt: getGuestExpiry(),
+      },
+    });
 
   return {
     conversation,
@@ -238,13 +286,11 @@ export const getAiSupportConversation = async ({
   user,
   guestToken,
 }) => {
-  const conversation = await getConversationAccess({
+  return getConversationAccess({
     conversationId,
     user,
     guestToken,
   });
-
-  return conversation;
 };
 
 export const sendAiSupportMessage = async ({
@@ -253,13 +299,6 @@ export const sendAiSupportMessage = async ({
   guestToken,
   message,
 }) => {
-  if (!process.env.OPENAI_API_KEY) {
-    throw new AiSupportServiceError(
-      "AI Support is not configured yet.",
-      503
-    );
-  }
-
   const normalizedMessage = normalizeMessage(message);
 
   const conversation = await getConversationAccess({
@@ -275,34 +314,40 @@ export const sendAiSupportMessage = async ({
     );
   }
 
-  const userMessage = await prisma.aiSupportMessage.create({
-    data: {
-      conversationId: conversation.id,
-      role: "USER",
-      content: normalizedMessage,
-    },
-  });
+  const userMessage =
+    await prisma.aiSupportMessage.create({
+      data: {
+        conversationId: conversation.id,
+        role: "USER",
+        content: normalizedMessage,
+      },
+    });
 
-  const history = await prisma.aiSupportMessage.findMany({
-    where: {
-      conversationId: conversation.id,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-    take: MAX_HISTORY_MESSAGES,
-  });
+  const history =
+    await prisma.aiSupportMessage.findMany({
+      where: {
+        conversationId: conversation.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: MAX_HISTORY_MESSAGES,
+    });
 
   history.reverse();
 
   const input = history.map((item) => ({
-    role: item.role === "USER" ? "user" : "assistant",
+    role: item.role === "USER"
+      ? "user"
+      : "assistant",
     content: item.content,
   }));
 
   let aiResponse;
 
   try {
+    const openai = getOpenAIClient();
+
     aiResponse = await openai.responses.create({
       model: MODEL,
       instructions: getSystemInstructions(),
@@ -310,10 +355,36 @@ export const sendAiSupportMessage = async ({
       max_output_tokens: 700,
     });
   } catch (error) {
-    console.error(
-      "AI SUPPORT OPENAI ERROR:",
-      error?.message || error
-    );
+    const status = error?.status;
+    const errorCode = error?.code;
+    const errorMessage = error?.message || "";
+
+    // Log diagnostic information, but never log the API key.
+    console.error("AI SUPPORT OPENAI ERROR:", {
+      status,
+      code: errorCode,
+      message: errorMessage,
+    });
+
+    if (
+      status === 429 &&
+      (
+        errorCode === "insufficient_quota" ||
+        /credit|billing|quota/i.test(errorMessage)
+      )
+    ) {
+      throw new AiSupportServiceError(
+        "AI Support is temporarily unavailable because API credits are exhausted. Please use Human Support.",
+        503
+      );
+    }
+
+    if (status === 401) {
+      throw new AiSupportServiceError(
+        "AI Support authentication failed. Please contact the administrator.",
+        503
+      );
+    }
 
     throw new AiSupportServiceError(
       "The AI assistant is temporarily unavailable. Please try again or use Human Support.",
@@ -321,7 +392,8 @@ export const sendAiSupportMessage = async ({
     );
   }
 
-  const assistantText = aiResponse.output_text?.trim();
+  const assistantText =
+    aiResponse.output_text?.trim();
 
   if (!assistantText) {
     throw new AiSupportServiceError(
@@ -330,18 +402,23 @@ export const sendAiSupportMessage = async ({
     );
   }
 
-  const assistantMessage = await prisma.aiSupportMessage.create({
-    data: {
-      conversationId: conversation.id,
-      role: "ASSISTANT",
-      content: assistantText,
-    },
-  });
+  const assistantMessage =
+    await prisma.aiSupportMessage.create({
+      data: {
+        conversationId: conversation.id,
+        role: "ASSISTANT",
+        content: assistantText,
+      },
+    });
 
   await prisma.aiSupportConversation.update({
-    where: { id: conversation.id },
+    where: {
+      id: conversation.id,
+    },
     data: {
-      title: conversation.title || normalizedMessage.slice(0, 80),
+      title:
+        conversation.title ||
+        normalizedMessage.slice(0, 80),
     },
   });
 
@@ -394,7 +471,9 @@ export const escalateAiSupportConversation = async ({
       typeof guestName !== "string" ||
       guestName.trim().length < 2 ||
       typeof guestEmail !== "string" ||
-      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail.trim())
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
+        guestEmail.trim()
+      )
     ) {
       throw new AiSupportServiceError(
         "Please provide your name and a valid email address for Human Support."
@@ -405,7 +484,9 @@ export const escalateAiSupportConversation = async ({
   const transcript = conversation.messages
     .map((item) => {
       const speaker =
-        item.role === "USER" ? "Customer" : "ShopEase Assistant";
+        item.role === "USER"
+          ? "Customer"
+          : "ShopEase Assistant";
 
       return `${speaker}:\n${item.content}`;
     })
@@ -420,17 +501,26 @@ export const escalateAiSupportConversation = async ({
 
   // Reuse the existing support service.
   // It handles ticket creation and its existing notification/email workflow.
-  const ticket = await createSupportTicket(user || null, {
-    category,
-    subject: subject.trim(),
-    description,
-    priority: "NORMAL",
-    guestName: user ? undefined : guestName.trim(),
-    guestEmail: user ? undefined : guestEmail.trim(),
-  });
+  const ticket = await createSupportTicket(
+    user || null,
+    {
+      category,
+      subject: subject.trim(),
+      description,
+      priority: "NORMAL",
+      guestName: user
+        ? undefined
+        : guestName.trim(),
+      guestEmail: user
+        ? undefined
+        : guestEmail.trim(),
+    }
+  );
 
   await prisma.aiSupportConversation.update({
-    where: { id: conversation.id },
+    where: {
+      id: conversation.id,
+    },
     data: {
       status: "ESCALATED",
       supportTicketId: ticket.id,
