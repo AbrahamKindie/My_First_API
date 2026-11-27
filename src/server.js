@@ -25,12 +25,17 @@ import adminRoutes from "./routs/adminRoutes.js";
 import shopRoutes from "./routs/shopRoutes.js";
 import userRoutes from "./routs/userRoutes.js";
 import adminRoleRoutes from "./routs/adminRoleRoutes.js";
+import supportRoutes from "./routs/supportRoutes.js";
+
+// AI-powered customer support routes.
+import aiSupportRoutes from "./routs/aiSupportRoutes.js";
 
 // ==========================================
 // BACKGROUND SERVICES
 // ==========================================
 
 import { startOrderScheduler } from "./services/orderScheduler.js";
+import { startSupportEmailWorker } from "./services/supportEmailService.js";
 
 // ==========================================
 // EXPRESS APPLICATION
@@ -64,12 +69,10 @@ app.use(
 // SWAGGER / OPENAPI DOCUMENTATION
 // ==========================================
 
-// OpenAPI JSON specification.
 app.get("/openapi.json", (req, res) => {
   res.status(200).json(swaggerSpec);
 });
 
-// Interactive Swagger UI.
 app.use(
   "/api-docs",
   swaggerUi.serve,
@@ -109,11 +112,31 @@ app.use("/notifications", notificationRoutes);
 app.use("/shops", shopRoutes);
 app.use("/users", userRoutes);
 
-// Admin account and marketplace management.
-app.use("/admin", adminRoutes);
+// ==========================================
+// ADMIN ROUTES
+// ==========================================
 
-// Admin roles and permission management.
+app.use("/admin", adminRoutes);
 app.use("/admin", adminRoleRoutes);
+
+// ==========================================
+// AI CUSTOMER SUPPORT ROUTES
+// ==========================================
+
+// AI chat endpoints:
+// POST /support/ai/conversations
+// GET  /support/ai/conversations
+// GET  /support/ai/conversations/:conversationId
+// POST /support/ai/conversations/:conversationId/messages
+// POST /support/ai/conversations/:conversationId/handoff
+
+app.use("/support/ai", aiSupportRoutes);
+
+// ==========================================
+// HUMAN SUPPORT TICKET ROUTES
+// ==========================================
+
+app.use("/support", supportRoutes);
 
 // ==========================================
 // HEALTH CHECK
@@ -150,7 +173,6 @@ app.use((err, req, res, next) => {
   console.error("Full error:", err);
   console.error("==================================");
 
-  // Delegate if response headers have already been sent.
   if (res.headersSent) {
     return next(err);
   }
@@ -190,7 +212,7 @@ app.use((err, req, res, next) => {
 // ==========================================
 
 const PORT = process.env.PORT || 3000;
-const PRODUCTION_API_URL= process.env.PRODUCTION_API_URL;
+const PRODUCTION_API_URL = process.env.PRODUCTION_API_URL;
 
 const server = app.listen(PORT, () => {
   console.log("========================================");
@@ -199,8 +221,20 @@ const server = app.listen(PORT, () => {
   console.log(`Server:       http://localhost:${PORT}`);
   console.log(`Swagger UI:   http://localhost:${PORT}/api-docs`);
   console.log(`OpenAPI JSON: http://localhost:${PORT}/openapi.json`);
-  console.log(`production JSON : ${PRODUCTION_API_URL}/openapi.json`);
+  console.log(`Production:   ${PRODUCTION_API_URL || "Not configured"}`);
+  console.log("AI Support:   /support/ai");
   console.log("========================================");
+
+  // ==========================================
+  // START SUPPORT EMAIL WORKER
+  // ==========================================
+
+  try {
+    startSupportEmailWorker();
+    console.log("[SUPPORT EMAIL WORKER] Started successfully.");
+  } catch (error) {
+    console.error("[SUPPORT EMAIL WORKER] Failed to start:", error);
+  }
 
   // ==========================================
   // START ORDER SCHEDULER

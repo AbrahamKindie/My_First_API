@@ -228,3 +228,114 @@ export const updateReview = async (userId, reviewId, data) => {
     },
   });
 };
+
+
+/**
+ * 4. Get all reviews for the authenticated Shop Owner's shop
+ */
+export const getMyShopReviews = async (
+  ownerId,
+  page = 1,
+  limit = 10
+) => {
+  const userId = validateId(ownerId, "user ID");
+
+  // Find the shop owned by the authenticated user
+  const shop = await prisma.shop.findUnique({
+    where: { ownerId: userId },
+    select: {
+      id: true,
+      name: true,
+    },
+  });
+
+  if (!shop) {
+    throw createError("Shop not found", 404);
+  }
+
+  const currentPage = Math.max(1, Number(page) || 1);
+  const pageSize = Math.min(100, Math.max(1, Number(limit) || 10));
+  const skip = (currentPage - 1) * pageSize;
+
+  // Only reviews for products belonging to this owner's shop
+  const where = {
+    product: {
+      shopId: shop.id,
+    },
+  };
+
+  const [reviews, total, ratingSummary, ratingGroups] =
+    await prisma.$transaction([
+      prisma.productReview.findMany({
+        where,
+        skip,
+        take: pageSize,
+        orderBy: { createdAt: "desc" },
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+          product: {
+            select: {
+              id: true,
+              name: true,
+            },
+          },
+        },
+      }),
+
+      prisma.productReview.count({ where }),
+
+      prisma.productReview.aggregate({
+        where,
+        _avg: { rating: true },
+        _count: { rating: true },
+      }),
+
+      prisma.productReview.groupBy({
+        by: ["rating"],
+        where,
+        _count: { rating: true },
+      }),
+    ]);
+
+  const ratingDistribution = {
+    1: 0,
+    2: 0,
+    3: 0,
+    4: 0,
+    5: 0,
+  };
+
+  ratingGroups.forEach((group) => {
+    ratingDistribution[group.rating] = group._count.rating;
+  });
+
+  return {
+    shop: {
+      id: shop.id,
+      name: shop.name,
+    },
+
+    reviews,
+
+    summary: {
+      averageRating: Number(
+        (ratingSummary._avg.rating || 0).toFixed(1)
+      ),
+      totalReviews: ratingSummary._count.rating,
+      ratingDistribution,
+    },
+
+    pagination: {
+      total,
+      page: currentPage,
+      limit: pageSize,
+      totalPages: Math.ceil(total / pageSize),
+    },
+  };
+};
+

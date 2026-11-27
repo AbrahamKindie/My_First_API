@@ -394,6 +394,10 @@ export type UserWhereInput = {
   productLikes?: Prisma.ProductLikeListRelationFilter
   productReports?: Prisma.ProductReportListRelationFilter
   reviewedProductReports?: Prisma.ProductReportListRelationFilter
+  supportTicketsRequested?: Prisma.SupportTicketListRelationFilter
+  supportTicketsAssigned?: Prisma.SupportTicketListRelationFilter
+  supportMessages?: Prisma.SupportMessageListRelationFilter
+  aiSupportConversations?: Prisma.AiSupportConversationListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -432,6 +436,10 @@ export type UserOrderByWithRelationInput = {
   productLikes?: Prisma.ProductLikeOrderByRelationAggregateInput
   productReports?: Prisma.ProductReportOrderByRelationAggregateInput
   reviewedProductReports?: Prisma.ProductReportOrderByRelationAggregateInput
+  supportTicketsRequested?: Prisma.SupportTicketOrderByRelationAggregateInput
+  supportTicketsAssigned?: Prisma.SupportTicketOrderByRelationAggregateInput
+  supportMessages?: Prisma.SupportMessageOrderByRelationAggregateInput
+  aiSupportConversations?: Prisma.AiSupportConversationOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -473,6 +481,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   productLikes?: Prisma.ProductLikeListRelationFilter
   productReports?: Prisma.ProductReportListRelationFilter
   reviewedProductReports?: Prisma.ProductReportListRelationFilter
+  supportTicketsRequested?: Prisma.SupportTicketListRelationFilter
+  supportTicketsAssigned?: Prisma.SupportTicketListRelationFilter
+  supportMessages?: Prisma.SupportMessageListRelationFilter
+  aiSupportConversations?: Prisma.AiSupportConversationListRelationFilter
 }, "id" | "email" | "phone" | "adminPasswordSetupToken">
 
 export type UserOrderByWithAggregationInput = {
@@ -573,6 +585,10 @@ export type UserCreateInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -610,6 +626,10 @@ export type UserUncheckedCreateInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -646,6 +666,10 @@ export type UserUpdateInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -683,6 +707,10 @@ export type UserUncheckedUpdateInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1071,6 +1099,70 @@ export type UserUpdateOneRequiredWithoutShopNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutShopInput, Prisma.UserUpdateWithoutShopInput>, Prisma.UserUncheckedUpdateWithoutShopInput>
 }
 
+export type UserCreateNestedOneWithoutSupportTicketsRequestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsRequestedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsRequestedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutSupportTicketsAssignedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsAssignedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsAssignedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupportTicketsRequestedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsRequestedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsRequestedInput
+  upsert?: Prisma.UserUpsertWithoutSupportTicketsRequestedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportTicketsRequestedInput, Prisma.UserUpdateWithoutSupportTicketsRequestedInput>, Prisma.UserUncheckedUpdateWithoutSupportTicketsRequestedInput>
+}
+
+export type UserUpdateOneWithoutSupportTicketsAssignedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsAssignedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsAssignedInput
+  upsert?: Prisma.UserUpsertWithoutSupportTicketsAssignedInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportTicketsAssignedInput, Prisma.UserUpdateWithoutSupportTicketsAssignedInput>, Prisma.UserUncheckedUpdateWithoutSupportTicketsAssignedInput>
+}
+
+export type UserCreateNestedOneWithoutSupportMessagesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutSupportMessagesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportMessagesInput
+  upsert?: Prisma.UserUpsertWithoutSupportMessagesInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportMessagesInput, Prisma.UserUpdateWithoutSupportMessagesInput>, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+}
+
+export type UserCreateNestedOneWithoutAiSupportConversationsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiSupportConversationsInput, Prisma.UserUncheckedCreateWithoutAiSupportConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiSupportConversationsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutAiSupportConversationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAiSupportConversationsInput, Prisma.UserUncheckedCreateWithoutAiSupportConversationsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAiSupportConversationsInput
+  upsert?: Prisma.UserUpsertWithoutAiSupportConversationsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAiSupportConversationsInput, Prisma.UserUpdateWithoutAiSupportConversationsInput>, Prisma.UserUncheckedUpdateWithoutAiSupportConversationsInput>
+}
+
 export type UserCreateWithoutAdminRoleInput = {
   name: string
   email: string
@@ -1104,6 +1196,10 @@ export type UserCreateWithoutAdminRoleInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminRoleInput = {
@@ -1140,6 +1236,10 @@ export type UserUncheckedCreateWithoutAdminRoleInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminRoleInput = {
@@ -1232,6 +1332,10 @@ export type UserCreateWithoutAdminActivityLogsInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutAdminActivityLogsInput = {
@@ -1268,6 +1372,10 @@ export type UserUncheckedCreateWithoutAdminActivityLogsInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutAdminActivityLogsInput = {
@@ -1319,6 +1427,10 @@ export type UserUpdateWithoutAdminActivityLogsInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminActivityLogsInput = {
@@ -1355,6 +1467,10 @@ export type UserUncheckedUpdateWithoutAdminActivityLogsInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProductLikesInput = {
@@ -1390,6 +1506,10 @@ export type UserCreateWithoutProductLikesInput = {
   adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductLikesInput = {
@@ -1426,6 +1546,10 @@ export type UserUncheckedCreateWithoutProductLikesInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductLikesInput = {
@@ -1477,6 +1601,10 @@ export type UserUpdateWithoutProductLikesInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductLikesInput = {
@@ -1513,6 +1641,10 @@ export type UserUncheckedUpdateWithoutProductLikesInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProductReportsInput = {
@@ -1548,6 +1680,10 @@ export type UserCreateWithoutProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProductReportsInput = {
@@ -1584,6 +1720,10 @@ export type UserUncheckedCreateWithoutProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProductReportsInput = {
@@ -1624,6 +1764,10 @@ export type UserCreateWithoutReviewedProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewedProductReportsInput = {
@@ -1660,6 +1804,10 @@ export type UserUncheckedCreateWithoutReviewedProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewedProductReportsInput = {
@@ -1711,6 +1859,10 @@ export type UserUpdateWithoutProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProductReportsInput = {
@@ -1747,6 +1899,10 @@ export type UserUncheckedUpdateWithoutProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewedProductReportsInput = {
@@ -1793,6 +1949,10 @@ export type UserUpdateWithoutReviewedProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewedProductReportsInput = {
@@ -1829,6 +1989,10 @@ export type UserUncheckedUpdateWithoutReviewedProductReportsInput = {
   adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsInput = {
@@ -1864,6 +2028,10 @@ export type UserCreateWithoutReviewsInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -1900,6 +2068,10 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -1951,6 +2123,10 @@ export type UserUpdateWithoutReviewsInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -1987,6 +2163,10 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutOrdersInput = {
@@ -2022,6 +2202,10 @@ export type UserCreateWithoutOrdersInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutOrdersInput = {
@@ -2058,6 +2242,10 @@ export type UserUncheckedCreateWithoutOrdersInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutOrdersInput = {
@@ -2109,6 +2297,10 @@ export type UserUpdateWithoutOrdersInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutOrdersInput = {
@@ -2145,6 +2337,10 @@ export type UserUncheckedUpdateWithoutOrdersInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCartsInput = {
@@ -2180,6 +2376,10 @@ export type UserCreateWithoutCartsInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCartsInput = {
@@ -2216,6 +2416,10 @@ export type UserUncheckedCreateWithoutCartsInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCartsInput = {
@@ -2267,6 +2471,10 @@ export type UserUpdateWithoutCartsInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCartsInput = {
@@ -2303,6 +2511,10 @@ export type UserUncheckedUpdateWithoutCartsInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2338,6 +2550,10 @@ export type UserCreateWithoutNotificationsInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2374,6 +2590,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2425,6 +2645,10 @@ export type UserUpdateWithoutNotificationsInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2461,6 +2685,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShopInput = {
@@ -2496,6 +2724,10 @@ export type UserCreateWithoutShopInput = {
   productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShopInput = {
@@ -2532,6 +2764,10 @@ export type UserUncheckedCreateWithoutShopInput = {
   productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
   productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
   reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShopInput = {
@@ -2583,6 +2819,10 @@ export type UserUpdateWithoutShopInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShopInput = {
@@ -2619,6 +2859,706 @@ export type UserUncheckedUpdateWithoutShopInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSupportTicketsRequestedInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportTicketsRequestedInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportTicketsRequestedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsRequestedInput>
+}
+
+export type UserCreateWithoutSupportTicketsAssignedInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportTicketsAssignedInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportTicketsAssignedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsAssignedInput>
+}
+
+export type UserUpsertWithoutSupportTicketsRequestedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsRequestedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsRequestedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportTicketsRequestedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsRequestedInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsRequestedInput>
+}
+
+export type UserUpdateWithoutSupportTicketsRequestedInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportTicketsRequestedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserUpsertWithoutSupportTicketsAssignedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsAssignedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedCreateWithoutSupportTicketsAssignedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportTicketsAssignedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsAssignedInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsAssignedInput>
+}
+
+export type UserUpdateWithoutSupportTicketsAssignedInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportTicketsAssignedInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSupportMessagesInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  aiSupportConversations?: Prisma.AiSupportConversationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSupportMessagesInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSupportMessagesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+}
+
+export type UserUpsertWithoutSupportMessagesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportMessagesInput, Prisma.UserUncheckedCreateWithoutSupportMessagesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportMessagesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportMessagesInput, Prisma.UserUncheckedUpdateWithoutSupportMessagesInput>
+}
+
+export type UserUpdateWithoutSupportMessagesInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportMessagesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutAiSupportConversationsInput = {
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  adminRole?: Prisma.AdminRoleCreateNestedOneWithoutAdminsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutAiSupportConversationsInput = {
+  id?: number
+  name: string
+  email: string
+  password: string
+  sort_order?: number
+  phone?: string | null
+  dateOfBirth: Date | string
+  gender: string
+  address?: string | null
+  city?: string | null
+  country?: string | null
+  profileImage?: string | null
+  isVerified?: boolean
+  isActive?: boolean
+  role?: $Enums.Role
+  adminRoleId?: number | null
+  resetPasswordToken?: string | null
+  resetPasswordExpires?: Date | string | null
+  adminPasswordSetupToken?: string | null
+  adminPasswordSetupExpires?: Date | string | null
+  adminPasswordSetupCompleted?: boolean
+  refreshToken?: string | null
+  refreshTokenExpiry?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string | null
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutUserInput
+  carts?: Prisma.CartUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ProductReviewUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  shop?: Prisma.ShopUncheckedCreateNestedOneWithoutOwnerInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedCreateNestedManyWithoutActorInput
+  productLikes?: Prisma.ProductLikeUncheckedCreateNestedManyWithoutUserInput
+  productReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReporterInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedCreateNestedManyWithoutReviewerInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutRequesterInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutAssignedAdminInput
+  supportMessages?: Prisma.SupportMessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutAiSupportConversationsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiSupportConversationsInput, Prisma.UserUncheckedCreateWithoutAiSupportConversationsInput>
+}
+
+export type UserUpsertWithoutAiSupportConversationsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAiSupportConversationsInput, Prisma.UserUncheckedUpdateWithoutAiSupportConversationsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAiSupportConversationsInput, Prisma.UserUncheckedCreateWithoutAiSupportConversationsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAiSupportConversationsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAiSupportConversationsInput, Prisma.UserUncheckedUpdateWithoutAiSupportConversationsInput>
+}
+
+export type UserUpdateWithoutAiSupportConversationsInput = {
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminRole?: Prisma.AdminRoleUpdateOneWithoutAdminsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAiSupportConversationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  sort_order?: Prisma.IntFieldUpdateOperationsInput | number
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  dateOfBirth?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  gender?: Prisma.StringFieldUpdateOperationsInput | string
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  country?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  adminRoleId?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  resetPasswordToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  resetPasswordExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  adminPasswordSetupExpires?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  adminPasswordSetupCompleted?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  refreshToken?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  refreshTokenExpiry?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutUserNestedInput
+  carts?: Prisma.CartUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ProductReviewUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  shop?: Prisma.ShopUncheckedUpdateOneWithoutOwnerNestedInput
+  adminActivityLogs?: Prisma.AdminActivityLogUncheckedUpdateManyWithoutActorNestedInput
+  productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
+  productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
+  reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
 }
 
 export type UserCreateManyAdminRoleInput = {
@@ -2681,6 +3621,10 @@ export type UserUpdateWithoutAdminRoleInput = {
   productLikes?: Prisma.ProductLikeUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminRoleInput = {
@@ -2717,6 +3661,10 @@ export type UserUncheckedUpdateWithoutAdminRoleInput = {
   productLikes?: Prisma.ProductLikeUncheckedUpdateManyWithoutUserNestedInput
   productReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReporterNestedInput
   reviewedProductReports?: Prisma.ProductReportUncheckedUpdateManyWithoutReviewerNestedInput
+  supportTicketsRequested?: Prisma.SupportTicketUncheckedUpdateManyWithoutRequesterNestedInput
+  supportTicketsAssigned?: Prisma.SupportTicketUncheckedUpdateManyWithoutAssignedAdminNestedInput
+  supportMessages?: Prisma.SupportMessageUncheckedUpdateManyWithoutSenderNestedInput
+  aiSupportConversations?: Prisma.AiSupportConversationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutAdminRoleInput = {
@@ -2760,6 +3708,10 @@ export type UserCountOutputType = {
   productLikes: number
   productReports: number
   reviewedProductReports: number
+  supportTicketsRequested: number
+  supportTicketsAssigned: number
+  supportMessages: number
+  aiSupportConversations: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2771,6 +3723,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   productLikes?: boolean | UserCountOutputTypeCountProductLikesArgs
   productReports?: boolean | UserCountOutputTypeCountProductReportsArgs
   reviewedProductReports?: boolean | UserCountOutputTypeCountReviewedProductReportsArgs
+  supportTicketsRequested?: boolean | UserCountOutputTypeCountSupportTicketsRequestedArgs
+  supportTicketsAssigned?: boolean | UserCountOutputTypeCountSupportTicketsAssignedArgs
+  supportMessages?: boolean | UserCountOutputTypeCountSupportMessagesArgs
+  aiSupportConversations?: boolean | UserCountOutputTypeCountAiSupportConversationsArgs
 }
 
 /**
@@ -2839,6 +3795,34 @@ export type UserCountOutputTypeCountReviewedProductReportsArgs<ExtArgs extends r
   where?: Prisma.ProductReportWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportTicketsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportTicketsAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportMessageWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAiSupportConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AiSupportConversationWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2876,6 +3860,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   productLikes?: boolean | Prisma.User$productLikesArgs<ExtArgs>
   productReports?: boolean | Prisma.User$productReportsArgs<ExtArgs>
   reviewedProductReports?: boolean | Prisma.User$reviewedProductReportsArgs<ExtArgs>
+  supportTicketsRequested?: boolean | Prisma.User$supportTicketsRequestedArgs<ExtArgs>
+  supportTicketsAssigned?: boolean | Prisma.User$supportTicketsAssignedArgs<ExtArgs>
+  supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
+  aiSupportConversations?: boolean | Prisma.User$aiSupportConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2977,6 +3965,10 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   productLikes?: boolean | Prisma.User$productLikesArgs<ExtArgs>
   productReports?: boolean | Prisma.User$productReportsArgs<ExtArgs>
   reviewedProductReports?: boolean | Prisma.User$reviewedProductReportsArgs<ExtArgs>
+  supportTicketsRequested?: boolean | Prisma.User$supportTicketsRequestedArgs<ExtArgs>
+  supportTicketsAssigned?: boolean | Prisma.User$supportTicketsAssignedArgs<ExtArgs>
+  supportMessages?: boolean | Prisma.User$supportMessagesArgs<ExtArgs>
+  aiSupportConversations?: boolean | Prisma.User$aiSupportConversationsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2999,6 +3991,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     productLikes: Prisma.$ProductLikePayload<ExtArgs>[]
     productReports: Prisma.$ProductReportPayload<ExtArgs>[]
     reviewedProductReports: Prisma.$ProductReportPayload<ExtArgs>[]
+    supportTicketsRequested: Prisma.$SupportTicketPayload<ExtArgs>[]
+    supportTicketsAssigned: Prisma.$SupportTicketPayload<ExtArgs>[]
+    supportMessages: Prisma.$SupportMessagePayload<ExtArgs>[]
+    aiSupportConversations: Prisma.$AiSupportConversationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3430,6 +4426,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   productLikes<T extends Prisma.User$productLikesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productLikesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductLikePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   productReports<T extends Prisma.User$productReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$productReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviewedProductReports<T extends Prisma.User$reviewedProductReportsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewedProductReportsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ProductReportPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTicketsRequested<T extends Prisma.User$supportTicketsRequestedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsRequestedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTicketsAssigned<T extends Prisma.User$supportTicketsAssignedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsAssignedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportMessages<T extends Prisma.User$supportMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  aiSupportConversations<T extends Prisma.User$aiSupportConversationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$aiSupportConversationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AiSupportConversationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4112,6 +5112,102 @@ export type User$reviewedProductReportsArgs<ExtArgs extends runtime.Types.Extens
   take?: number
   skip?: number
   distinct?: Prisma.ProductReportScalarFieldEnum | Prisma.ProductReportScalarFieldEnum[]
+}
+
+/**
+ * User.supportTicketsRequested
+ */
+export type User$supportTicketsRequestedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * User.supportTicketsAssigned
+ */
+export type User$supportTicketsAssignedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * User.supportMessages
+ */
+export type User$supportMessagesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportMessage
+   */
+  select?: Prisma.SupportMessageSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportMessage
+   */
+  omit?: Prisma.SupportMessageOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportMessageInclude<ExtArgs> | null
+  where?: Prisma.SupportMessageWhereInput
+  orderBy?: Prisma.SupportMessageOrderByWithRelationInput | Prisma.SupportMessageOrderByWithRelationInput[]
+  cursor?: Prisma.SupportMessageWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportMessageScalarFieldEnum | Prisma.SupportMessageScalarFieldEnum[]
+}
+
+/**
+ * User.aiSupportConversations
+ */
+export type User$aiSupportConversationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AiSupportConversation
+   */
+  select?: Prisma.AiSupportConversationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AiSupportConversation
+   */
+  omit?: Prisma.AiSupportConversationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AiSupportConversationInclude<ExtArgs> | null
+  where?: Prisma.AiSupportConversationWhereInput
+  orderBy?: Prisma.AiSupportConversationOrderByWithRelationInput | Prisma.AiSupportConversationOrderByWithRelationInput[]
+  cursor?: Prisma.AiSupportConversationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AiSupportConversationScalarFieldEnum | Prisma.AiSupportConversationScalarFieldEnum[]
 }
 
 /**

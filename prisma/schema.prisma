@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -85,6 +84,11 @@ enum NotificationType {
   ORDER_PENDING_REMINDER
   ORDER_AUTO_CANCELLED
   ORDER_CANCELLED_BY_CUSTOMER
+
+  SUPPORT_TICKET_CREATED
+  SUPPORT_TICKET_REPLY
+  SUPPORT_TICKET_STATUS_UPDATED
+  SUPPORT_TICKET_ASSIGNED
 }
 
 enum OrderEmailJobType {
@@ -101,8 +105,22 @@ enum EmailJobStatus {
 }
 
 // ==============================
-// DATABASE-DRIVEN ADMIN PERMISSION
-// CATALOG
+// AI SUPPORT ENUMS
+// ==============================
+
+enum AiSupportConversationStatus {
+  ACTIVE
+  ESCALATED
+  CLOSED
+}
+
+enum AiSupportMessageRole {
+  USER
+  ASSISTANT
+}
+
+// ==============================
+// ADMIN PERMISSION CATALOG
 // ==============================
 
 model AdminPermission {
@@ -164,6 +182,14 @@ model User {
   productReports         ProductReport[]    @relation("ProductReportReporter")
   reviewedProductReports ProductReport[]    @relation("ProductReportReviewer")
 
+  // Human Support
+  supportTicketsRequested SupportTicket[]  @relation("SupportTicketRequester")
+  supportTicketsAssigned  SupportTicket[]  @relation("SupportTicketAssignee")
+  supportMessages         SupportMessage[] @relation("SupportMessageSender")
+
+  // AI Support
+  aiSupportConversations AiSupportConversation[]
+
   // Password reset
   resetPasswordToken   String?
   resetPasswordExpires DateTime?
@@ -207,7 +233,6 @@ model AdminRole {
 
 // ==============================
 // ADMIN ROLE PERMISSIONS
-// DATABASE RELATIONSHIP
 // ==============================
 
 model AdminRolePermission {
@@ -244,7 +269,6 @@ model AdminActivityLog {
 
 // ==============================
 // SHOP CATEGORY
-// ADMIN / SUPER ADMIN MANAGED
 // ==============================
 
 model ShopCategory {
@@ -261,7 +285,6 @@ model ShopCategory {
 
 // ==============================
 // PRODUCT CATEGORY
-// SHOP OWNER MANAGED
 // ==============================
 
 model ProductCategory {
@@ -532,10 +555,14 @@ model Notification {
   product Product? @relation(fields: [productId], references: [id], onDelete: SetNull)
   order   Order?   @relation(fields: [orderId], references: [id], onDelete: Cascade)
 
+  supportTicketId Int?
+  supportTicket   SupportTicket? @relation(fields: [supportTicketId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   @@unique([userId, orderId, type])
+  @@index([supportTicketId])
   @@index([userId, isRead, createdAt])
   @@index([productId])
   @@index([orderId])
@@ -566,8 +593,7 @@ model Shop {
 
   status ShopStatus @default(ACTIVE)
 
-  owner User @relation(fields: [ownerId], references: [id], onDelete: Cascade)
-
+  owner             User              @relation(fields: [ownerId], references: [id], onDelete: Cascade)
   products          Product[]
   productCategories ProductCategory[]
   orders            Order[]
@@ -604,4 +630,219 @@ model OrderEmailJob {
   @@unique([orderId, recipientUserId, type])
   @@index([status, nextAttemptAt])
   @@index([orderId])
+}
+
+// ==============================
+// SUPPORT TICKET ENUMS
+// ==============================
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_FOR_USER
+  RESOLVED
+  CLOSED
+  REJECTED
+}
+
+enum SupportTicketCategory {
+  ACCOUNT
+  ORDER
+  PAYMENT
+  PRODUCT
+  SHOP
+  SHIPPING
+  RETURN_REFUND
+  TECHNICAL
+  OTHER
+}
+
+enum SupportTicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+// ==============================
+// SUPPORT TICKET
+// ==============================
+
+model SupportTicket {
+  id           Int    @id @default(autoincrement())
+  ticketNumber String @unique
+
+  // Registered customer (optional for guest tickets)
+  requesterId Int?
+  requester   User? @relation("SupportTicketRequester", fields: [requesterId], references: [id], onDelete: SetNull)
+
+  // Guest customer information
+  guestName                 String?
+  guestEmail                String?
+  guestAccessTokenHash      String?   @unique
+  guestAccessTokenExpiresAt DateTime?
+  guestEmailVerifiedAt      DateTime?
+
+  // Admin assignment
+  assignedAdminId Int?
+  assignedAdmin   User? @relation("SupportTicketAssignee", fields: [assignedAdminId], references: [id], onDelete: SetNull)
+
+  // Plain-text names received from frontend
+  shopName    String?
+  productName String?
+
+  // Ticket details
+  category    SupportTicketCategory
+  subject     String
+  description String                @db.Text
+  status      SupportTicketStatus   @default(OPEN)
+  priority    SupportTicketPriority @default(NORMAL)
+
+  // Ticket communication and notifications
+  messages         SupportMessage[]
+  notifications    Notification[]
+  supportEmailJobs SupportEmailJob[]
+
+  // AI conversation escalation
+  aiConversation AiSupportConversation?
+
+  resolutionSummary    String?   @db.Text
+  rejectionDescription String?   @db.Text
+  resolvedAt           DateTime?
+  rejectedAt           DateTime?
+
+  closedAt  DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([requesterId, createdAt])
+  @@index([guestEmail, createdAt])
+  @@index([assignedAdminId, status])
+  @@index([status, createdAt])
+  @@index([shopName])
+  @@index([productName])
+}
+
+// ==============================
+// SUPPORT MESSAGE
+// ==============================
+
+model SupportMessage {
+  id       Int @id @default(autoincrement())
+  ticketId Int
+
+  // Null when sender is a guest
+  senderId Int?
+  sender   User? @relation("SupportMessageSender", fields: [senderId], references: [id], onDelete: SetNull)
+
+  message        String   @db.Text
+  attachmentUrls String[] @default([])
+
+  ticket SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([ticketId, createdAt])
+  @@index([senderId])
+}
+
+// ==============================
+// SUPPORT EMAIL JOB
+// ==============================
+
+enum SupportEmailJobStatus {
+  PENDING
+  SENDING
+  SENT
+  FAILED
+}
+
+model SupportEmailJob {
+  id       Int  @id @default(autoincrement())
+  ticketId Int?
+
+  recipientEmail String
+  recipientName  String?
+
+  subject String
+  html    String  @db.Text
+  text    String? @db.Text
+
+  dedupeKey String @unique
+
+  status      SupportEmailJobStatus @default(PENDING)
+  attempts    Int                   @default(0)
+  maxAttempts Int                   @default(5)
+
+  nextAttemptAt DateTime  @default(now())
+  sentAt        DateTime?
+  lastError     String?   @db.Text
+
+  ticket SupportTicket? @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status, nextAttemptAt])
+  @@index([ticketId])
+}
+
+// ==============================
+// AI SUPPORT CONVERSATION
+// ==============================
+
+// ==============================
+// AI SUPPORT CONVERSATION
+// ==============================
+
+model AiSupportConversation {
+  id String @id @default(cuid())
+
+  // Authenticated conversation owner
+  userId Int?
+  user   User? @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Guest conversation authentication
+  // Only the SHA-256 hash is stored.
+  guestTokenHash      String?   @unique
+  guestTokenExpiresAt DateTime?
+
+  // Conversation information
+  title  String?
+  status AiSupportConversationStatus @default(ACTIVE)
+
+  // Optional human support escalation
+  supportTicketId Int?           @unique
+  supportTicket   SupportTicket? @relation(fields: [supportTicketId], references: [id], onDelete: SetNull)
+
+  // Conversation messages
+  messages AiSupportMessage[]
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+  @@index([status, updatedAt])
+  @@index([guestTokenExpiresAt])
+}
+
+// ==============================
+// AI SUPPORT MESSAGE
+// ==============================
+
+model AiSupportMessage {
+  id String @id @default(cuid())
+
+  conversationId String
+
+  conversation AiSupportConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  role AiSupportMessageRole
+
+  content String @db.Text
+
+  createdAt DateTime @default(now())
+
+  @@index([conversationId, createdAt])
 }

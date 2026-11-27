@@ -110,7 +110,11 @@ export const NotificationType = {
   SHOP_APPLICATION_REJECTED: 'SHOP_APPLICATION_REJECTED',
   ORDER_PENDING_REMINDER: 'ORDER_PENDING_REMINDER',
   ORDER_AUTO_CANCELLED: 'ORDER_AUTO_CANCELLED',
-  ORDER_CANCELLED_BY_CUSTOMER: 'ORDER_CANCELLED_BY_CUSTOMER'
+  ORDER_CANCELLED_BY_CUSTOMER: 'ORDER_CANCELLED_BY_CUSTOMER',
+  SUPPORT_TICKET_CREATED: 'SUPPORT_TICKET_CREATED',
+  SUPPORT_TICKET_REPLY: 'SUPPORT_TICKET_REPLY',
+  SUPPORT_TICKET_STATUS_UPDATED: 'SUPPORT_TICKET_STATUS_UPDATED',
+  SUPPORT_TICKET_ASSIGNED: 'SUPPORT_TICKET_ASSIGNED'
 } as const
 
 export type NotificationType = (typeof NotificationType)[keyof typeof NotificationType]
@@ -133,3 +137,67 @@ export const EmailJobStatus = {
 } as const
 
 export type EmailJobStatus = (typeof EmailJobStatus)[keyof typeof EmailJobStatus]
+
+
+export const AiSupportConversationStatus = {
+  ACTIVE: 'ACTIVE',
+  ESCALATED: 'ESCALATED',
+  CLOSED: 'CLOSED'
+} as const
+
+export type AiSupportConversationStatus = (typeof AiSupportConversationStatus)[keyof typeof AiSupportConversationStatus]
+
+
+export const AiSupportMessageRole = {
+  USER: 'USER',
+  ASSISTANT: 'ASSISTANT'
+} as const
+
+export type AiSupportMessageRole = (typeof AiSupportMessageRole)[keyof typeof AiSupportMessageRole]
+
+
+export const SupportTicketStatus = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  WAITING_FOR_USER: 'WAITING_FOR_USER',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED',
+  REJECTED: 'REJECTED'
+} as const
+
+export type SupportTicketStatus = (typeof SupportTicketStatus)[keyof typeof SupportTicketStatus]
+
+
+export const SupportTicketCategory = {
+  ACCOUNT: 'ACCOUNT',
+  ORDER: 'ORDER',
+  PAYMENT: 'PAYMENT',
+  PRODUCT: 'PRODUCT',
+  SHOP: 'SHOP',
+  SHIPPING: 'SHIPPING',
+  RETURN_REFUND: 'RETURN_REFUND',
+  TECHNICAL: 'TECHNICAL',
+  OTHER: 'OTHER'
+} as const
+
+export type SupportTicketCategory = (typeof SupportTicketCategory)[keyof typeof SupportTicketCategory]
+
+
+export const SupportTicketPriority = {
+  LOW: 'LOW',
+  NORMAL: 'NORMAL',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+} as const
+
+export type SupportTicketPriority = (typeof SupportTicketPriority)[keyof typeof SupportTicketPriority]
+
+
+export const SupportEmailJobStatus = {
+  PENDING: 'PENDING',
+  SENDING: 'SENDING',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type SupportEmailJobStatus = (typeof SupportEmailJobStatus)[keyof typeof SupportEmailJobStatus]

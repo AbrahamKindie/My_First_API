@@ -69,7 +69,12 @@ export const ModelName = {
   CartItem: 'CartItem',
   Notification: 'Notification',
   Shop: 'Shop',
-  OrderEmailJob: 'OrderEmailJob'
+  OrderEmailJob: 'OrderEmailJob',
+  SupportTicket: 'SupportTicket',
+  SupportMessage: 'SupportMessage',
+  SupportEmailJob: 'SupportEmailJob',
+  AiSupportConversation: 'AiSupportConversation',
+  AiSupportMessage: 'AiSupportMessage'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -328,6 +333,7 @@ export const NotificationScalarFieldEnum = {
   message: 'message',
   link: 'link',
   isRead: 'isRead',
+  supportTicketId: 'supportTicketId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -373,6 +379,95 @@ export const OrderEmailJobScalarFieldEnum = {
 } as const
 
 export type OrderEmailJobScalarFieldEnum = (typeof OrderEmailJobScalarFieldEnum)[keyof typeof OrderEmailJobScalarFieldEnum]
+
+
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  ticketNumber: 'ticketNumber',
+  requesterId: 'requesterId',
+  guestName: 'guestName',
+  guestEmail: 'guestEmail',
+  guestAccessTokenHash: 'guestAccessTokenHash',
+  guestAccessTokenExpiresAt: 'guestAccessTokenExpiresAt',
+  guestEmailVerifiedAt: 'guestEmailVerifiedAt',
+  assignedAdminId: 'assignedAdminId',
+  shopName: 'shopName',
+  productName: 'productName',
+  category: 'category',
+  subject: 'subject',
+  description: 'description',
+  status: 'status',
+  priority: 'priority',
+  resolutionSummary: 'resolutionSummary',
+  rejectionDescription: 'rejectionDescription',
+  resolvedAt: 'resolvedAt',
+  rejectedAt: 'rejectedAt',
+  closedAt: 'closedAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
+export const SupportMessageScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  senderId: 'senderId',
+  message: 'message',
+  attachmentUrls: 'attachmentUrls',
+  createdAt: 'createdAt'
+} as const
+
+export type SupportMessageScalarFieldEnum = (typeof SupportMessageScalarFieldEnum)[keyof typeof SupportMessageScalarFieldEnum]
+
+
+export const SupportEmailJobScalarFieldEnum = {
+  id: 'id',
+  ticketId: 'ticketId',
+  recipientEmail: 'recipientEmail',
+  recipientName: 'recipientName',
+  subject: 'subject',
+  html: 'html',
+  text: 'text',
+  dedupeKey: 'dedupeKey',
+  status: 'status',
+  attempts: 'attempts',
+  maxAttempts: 'maxAttempts',
+  nextAttemptAt: 'nextAttemptAt',
+  sentAt: 'sentAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SupportEmailJobScalarFieldEnum = (typeof SupportEmailJobScalarFieldEnum)[keyof typeof SupportEmailJobScalarFieldEnum]
+
+
+export const AiSupportConversationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  guestTokenHash: 'guestTokenHash',
+  guestTokenExpiresAt: 'guestTokenExpiresAt',
+  title: 'title',
+  status: 'status',
+  supportTicketId: 'supportTicketId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AiSupportConversationScalarFieldEnum = (typeof AiSupportConversationScalarFieldEnum)[keyof typeof AiSupportConversationScalarFieldEnum]
+
+
+export const AiSupportMessageScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  role: 'role',
+  content: 'content',
+  createdAt: 'createdAt'
+} as const
+
+export type AiSupportMessageScalarFieldEnum = (typeof AiSupportMessageScalarFieldEnum)[keyof typeof AiSupportMessageScalarFieldEnum]
 
 
 export const SortOrder = {

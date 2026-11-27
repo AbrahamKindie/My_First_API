@@ -12,7 +12,10 @@ import {
   createReviewController,
   getProductReviewsController,
   updateReviewController,
+  getMyShopReviewsController,
 } from "../controllers/reviewControllers.js";
+
+import requireShopOwner from "../middleware/requireShopOwner.js";
 
 const router = Router();
 
@@ -37,5 +40,16 @@ router.patch(
   validate(updateReviewSchema),
   updateReviewController
 );
+
+
+ // Shop Owner - Get reviews for products in their shop
+ // GET /reviews/my-shop
+router.get(
+  "/my-shop",
+  authenticate,
+  requireShopOwner,
+  getMyShopReviewsController
+);
+
 
 export default router;

@@ -136,3 +136,28 @@ export type Shop = Prisma.ShopModel
  * 
  */
 export type OrderEmailJob = Prisma.OrderEmailJobModel
+/**
+ * Model SupportTicket
+ * 
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
+ * Model SupportMessage
+ * 
+ */
+export type SupportMessage = Prisma.SupportMessageModel
+/**
+ * Model SupportEmailJob
+ * 
+ */
+export type SupportEmailJob = Prisma.SupportEmailJobModel
+/**
+ * Model AiSupportConversation
+ * 
+ */
+export type AiSupportConversation = Prisma.AiSupportConversationModel
+/**
+ * Model AiSupportMessage
+ * 
+ */
+export type AiSupportMessage = Prisma.AiSupportMessageModel

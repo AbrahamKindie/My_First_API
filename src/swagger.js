@@ -1818,25 +1818,25 @@ servers: [
 // DOCUMENTATION DIAGNOSTICS
 // =====================================================
 
-const discoveredPaths = Object.keys(swaggerSpec.paths);
+// const discoveredPaths = Object.keys(swaggerSpec.paths);
 
-const endpointCount = discoveredPaths.reduce(
-  (total, route) => total + Object.keys(swaggerSpec.paths[route]).length,
-  0,
-);
+// const endpointCount = discoveredPaths.reduce(
+//   (total, route) => total + Object.keys(swaggerSpec.paths[route]).length,
+//   0,
+// );
 
-console.log("\n========== SWAGGER DOCUMENTATION ==========");
-console.log("Discovered paths:", discoveredPaths.length);
-console.log("Documented operations:", endpointCount);
+// console.log("\n========== SWAGGER DOCUMENTATION ==========");
+// console.log("Discovered paths:", discoveredPaths.length);
+// console.log("Documented operations:", endpointCount);
 
-for (const route of discoveredPaths) {
-  const methods = Object.keys(swaggerSpec.paths[route])
-    .map((method) => method.toUpperCase())
-    .join(", ");
+// for (const route of discoveredPaths) {
+//   const methods = Object.keys(swaggerSpec.paths[route])
+//     .map((method) => method.toUpperCase())
+//     .join(", ");
 
-  console.log(`${methods} ${route}`);
-}
+//   console.log(`${methods} ${route}`);
+// }
 
-console.log("===========================================\n");
+// console.log("===========================================\n");
 
 export default swaggerSpec;

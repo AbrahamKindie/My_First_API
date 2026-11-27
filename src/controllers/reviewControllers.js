@@ -3,6 +3,7 @@ import {
   createReview,
   getProductReviews,
   updateReview,
+  getMyShopReviews,
 } from "../services/reviewServices.js";
 
 // Create review
@@ -84,3 +85,33 @@ export const updateReviewController = async (req, res) => {
     });
   }
 };
+
+
+export const getMyShopReviewsController = async (req, res) => {
+  try {
+    const result = await getMyShopReviews(
+      req.user.userId,
+      req.query.page,
+      req.query.limit
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Shop reviews retrieved successfully",
+      shop: result.shop,
+      data: result.reviews,
+      summary: result.summary,
+      pagination: result.pagination,
+    });
+  } catch (error) {
+    console.error("Get shop reviews error:", error);
+
+    return res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.statusCode
+        ? error.message
+        : "Internal server error",
+    });
+  }
+};
+

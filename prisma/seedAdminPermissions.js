@@ -105,6 +105,18 @@ const permissionGroups = {
     "VIEW_SETTINGS",
     "UPDATE_SETTINGS",
   ],
+
+  "Support Management": [
+     "CREATE_SUPPORT_TICKETS",
+     "VIEW_OWN_SUPPORT_TICKETS",
+     "REPLY_OWN_SUPPORT_TICKETS",
+     "CLOSE_OWN_SUPPORT_TICKETS",
+     "REOPEN_OWN_SUPPORT_TICKETS",
+     "VIEW_SHOP_CUSTOMER_TICKETS",
+     "REPLY_SHOP_CUSTOMER_TICKETS",
+     "UPDATE_SHOP_CUSTOMER_TICKET_STATUS",
+],
+  
 };
 
 // ==========================================
